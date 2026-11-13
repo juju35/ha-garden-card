@@ -1,0 +1,48 @@
+import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
+import { test } from "node:test";
+import { gifs, shots } from "../scripts/screenshot-list.mjs";
+
+const twinOf = (list, s) => list.find((t) => t.file === (s.theme === "light" ? `${s.file}-dark` : s.file.replace(/-dark$/, "")));
+const rest = ({ file, theme, ...r }) => r;
+
+for (const [kind, list] of [
+  ["screenshot", shots],
+  ["animation", gifs],
+]) {
+  test(`every ${kind} has a twin in the other theme showing the same state`, () => {
+    for (const s of list) {
+      const twin = twinOf(list, s);
+      assert.ok(twin, `${s.file} has no twin`);
+      assert.notEqual(twin.theme, s.theme);
+      assert.deepEqual(rest(twin), rest(s), `${twin.file} does not show the same state as ${s.file}`);
+    }
+  });
+}
+
+test("every file in screenshots/ is rendered by the screenshot script, and every capture is in the README", () => {
+  const rendered = new Set([...shots.map((s) => `${s.file}.png`), ...gifs.map((g) => `${g.file}.gif`)]);
+  const files = readdirSync(new URL("../screenshots/", import.meta.url));
+  assert.deepEqual(files.filter((f) => !rendered.has(f)), []);
+  const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
+  assert.deepEqual([...rendered].filter((f) => !readme.includes(`screenshots/${f}`)), []);
+});
+
+test("captures are compared by their pixels, exactly: size, frame count and every channel", async () => {
+  const { samePixels } = await import("../scripts/pixels.mjs");
+  const img = (w, h, bytes) => ({ width: w, height: h, frames: bytes.length / (w * h * 4), data: Uint8Array.from(bytes) });
+  const a = img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255]);
+  assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255])), true, "same pixels, other bytes on disk");
+  assert.equal(samePixels(a, img(1, 2, [11, 20, 30, 255, 40, 50, 60, 255])), false, "one level off");
+  assert.equal(samePixels(a, img(2, 1, [10, 20, 30, 255, 40, 50, 60, 255])), false, "another size");
+  assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255, 10, 20, 30, 255, 40, 50, 60, 255])), false, "another frame count");
+  assert.equal(samePixels(a, undefined), false);
+});
+
+test("the screenshot script writes a capture only through the pixel comparison, on a fixed clock", () => {
+  const src = readFileSync(new URL("../scripts/screenshots.mjs", import.meta.url), "utf8");
+  assert.match(src, /from "\.\/pixels\.mjs"/);
+  assert.doesNotMatch(src, /path:\s*`\$\{root\}screenshots\//);
+  assert.match(src, /unchanged\(/);
+  assert.match(src, /clock\.setFixedTime/);
+});
