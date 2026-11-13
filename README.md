@@ -184,10 +184,10 @@ language: en
 |---|---|---|---|
 | `title` | both | Garden | Card title |
 | `show_title` | both | `true` | Show the title in the header |
-| `show_subtitle` | full | `true` | Show the subtitle (next watering, or the number of zones and plants) |
+| `show_subtitle` | both | `true` | Show the subtitle (next watering, or the number of zones and plants) |
 | `zones` | both | Automatic | Watering zones: entity ids of valves or switches, or objects (see [Zone options](#zone-options)); empty or absent, the zones of the [supported integrations](#supported-integrations) |
 | `plants` | both | Automatic | Plants: `plant.*` entity ids, devices (`device:` its name or id) or plants made of sensors (see [Plant options](#plant-options)); absent, every plant entity and every plant sensor device |
-| `moisture_sensors` | full | Automatic | Soil moisture sensors: entity ids, or objects with `entity`, `name`, `min` and `max` (default 20–60 %); absent, the moisture sensors of no plant and no zone |
+| `moisture_sensors` | both | Automatic | Soil moisture sensors: entity ids, or objects with `entity`, `name`, `min` and `max` (default 20–60 %); absent, the moisture sensors of no plant and no zone |
 | `weather` | both | First weather entity | Weather entity whose forecast gives the rain expected; `none` for no rain suggestion |
 | `rain_sensor` | both | — | Sensor giving the rain expected over the window (in its unit, mm by default), used instead of the forecast amount (e.g. a Météo-France or OpenWeatherMap rain sensor) |
 | `rain_threshold` | both | `2` | Rain expected over the window from which watering is not needed, in the forecast's unit (mm, or in) |
@@ -196,11 +196,11 @@ language: en
 | `next_run` | both | — | Entity of the next watering: a timestamp sensor, an `input_datetime` or a calendar (start of its next event); the earliest of it and of the zones' next runs is shown |
 | `default_duration` | both | `10` | Duration preselected in the Start popup, in minutes (a zone's `duration`, else its device's duration number, comes first) |
 | `show_weather` | both | `true` | Rain suggestion (and the forecast subscription) |
-| `show_zones` | full | `true` | Watering zones section |
-| `show_plants` | full | `true` | Plants section |
-| `show_soil` | full | `true` | Soil moisture section |
-| `collapsed` | full | `[]` | Sections folded by default, among `zones`, `plants` and `soil`. Click a section title (or Tab to it and press Enter or Space) to fold or unfold it |
-| `zoom` | mini | `true` | Detail button at the top right of the mini card: it shows the full card's content (with the same options) and switches back to the compact view; a click outside the card also brings the compact view back. `false` removes the button |
+| `show_zones` | both | `true` | Watering zones section |
+| `show_plants` | both | `true` | Plants section |
+| `show_soil` | both | `true` | Soil moisture section |
+| `collapsed` | both | `[]` | Sections folded by default, among `zones`, `plants` and `soil`. Click a section title (or Tab to it and press Enter or Space) to fold or unfold it |
+| `zoom` | mini | `true` | Detail button at the top right of the mini card: it shows the full card's content (with the same options, so `show_zones`, `collapsed`, `moisture_sensors`… can be set on the mini card too, in its visual editor as well) and switches back to the compact view; a click outside the card also brings the compact view back. `false` removes the button |
 | `language` | both | Auto | Force language: `fr`, `en`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
 ### Zone options
