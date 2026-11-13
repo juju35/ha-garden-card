@@ -252,6 +252,27 @@ test("sections fold on their title, and a click elsewhere folds them back to the
   assert.match(html(), /data-section="plants" aria-expanded="true"/);
 });
 
+test("no rewrite under a press: an update is held until the click, which draws it at once, or the release", async () => {
+  const { card, html } = await mount({ collapsed: ["soil"] });
+  const closed = /data-section="plants" aria-expanded="false"/;
+  // Pressed: an update (here the section's state changed from elsewhere) does not rewrite the card under the pointer.
+  card._onPress();
+  card._toggled = new Map([["plants", true]]);
+  card._update();
+  assert.doesNotMatch(html(), closed, "held under the press");
+  // Released without a click: drawn right after.
+  card._onPressEnd();
+  await new Promise((r) => setTimeout(r, 0));
+  assert.match(html(), closed);
+  // The click itself draws at once.
+  card._onPress();
+  card._onPressClick({ detail: 1 });
+  click(card, { action: "toggle_section", section: "plants" });
+  assert.doesNotMatch(html(), closed);
+  card._onPressEnd();
+  await new Promise((r) => setTimeout(r, 0));
+});
+
 test("folding: a tap elsewhere (pointer), not a drag that ends outside; leaving the page folds back too", async () => {
   const { card, html } = await mount({ collapsed: ["soil"] });
   card.connectedCallback();
