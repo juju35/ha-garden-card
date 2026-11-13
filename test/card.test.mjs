@@ -247,10 +247,32 @@ test("sections fold on their title, and a click elsewhere folds them back to the
   click(card, { action: "toggle_section", section: "plants" });
   assert.match(html(), /data-section="plants" aria-expanded="false"/);
   assert.doesNotMatch(html(), /class="plants"/);
-  card._onOutside ??= null;
   card.connectedCallback();
-  card._onOutside({ composedPath: () => [] });
+  card._outside.tap({ composedPath: () => [] });
   assert.match(html(), /data-section="plants" aria-expanded="true"/);
+});
+
+test("folding: a tap elsewhere (pointer), not a drag that ends outside; leaving the page folds back too", async () => {
+  const { card, html } = await mount({ collapsed: ["soil"] });
+  card.connectedCallback();
+  const closed = /data-section="plants" aria-expanded="false"/;
+  click(card, { action: "toggle_section", section: "plants" });
+  // A slider pressed in the card and released outside of it: nothing goes back.
+  card._outside.tap({ composedPath: () => [card] });
+  assert.match(html(), closed);
+  // Left with the section changed and back: its default again.
+  card.disconnectedCallback();
+  card.connectedCallback();
+  assert.doesNotMatch(html(), closed);
+  card.disconnectedCallback();
+  const mini = await mount({}, {}, gc.GardenMiniCard);
+  mini.card.connectedCallback();
+  click(mini.card, { action: "zoom" });
+  assert.match(mini.html(), /class="zones"/);
+  mini.card.disconnectedCallback();
+  mini.card.connectedCallback();
+  assert.doesNotMatch(mini.html(), /class="zones"/, "back compact");
+  mini.card.disconnectedCallback();
 });
 
 test("mini card: compact lines and Stop; the detail button switches to the full card", async () => {

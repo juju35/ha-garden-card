@@ -2381,6 +2381,41 @@ const isOutside = (card, ev) => {
   const path = ev.composedPath();
   return !path.includes(card) && !path.some((n) => DIALOG_TAGS.has(n.tagName));
 };
+
+// "A click elsewhere" is caught on the pointer, not only on the click event: on iOS (Safari and the companion app) a
+// tap on something that is not clickable (the background, an empty spot, a card with no action) sends no click to the
+// page. It counts when the press and the release are both outside the card (a slider dragged out of the card does not
+// fold it), and a scroll does not count (the browser cancels the pointer). Keyboard clicks still go through the click
+// event. `tap(ev)` (a press and a release at the same spot) is for the tests.
+const watchOutside = (isOut, handler) => {
+  let downOutside = false;
+  const onDown = (ev) => {
+    downOutside = isOut(ev);
+  };
+  const onUp = (ev) => {
+    if (downOutside && isOut(ev)) handler(ev);
+    downOutside = false;
+  };
+  const onClick = (ev) => {
+    if (ev.detail === 0 && isOut(ev)) handler(ev);
+  };
+  return {
+    on() {
+      document.addEventListener("pointerdown", onDown, true);
+      document.addEventListener("pointerup", onUp, true);
+      document.addEventListener("click", onClick, true);
+    },
+    tap(ev) {
+      onDown(ev);
+      onUp(ev);
+    },
+    off() {
+      document.removeEventListener("pointerdown", onDown, true);
+      document.removeEventListener("pointerup", onUp, true);
+      document.removeEventListener("click", onClick, true);
+    },
+  };
+};
 // After the popup closes, clicks on the card are ignored this long (the second click of a double click on Start).
 const CONFIRM_GUARD_MS = 400;
 // Elements a click acts on, and how one is told from the others across renders (focus kept for keyboard users).
@@ -2485,13 +2520,16 @@ class GardenCard extends HTMLElement {
 
   connectedCallback() {
     // A click elsewhere on the page folds the sections back to their defaults and closes the popup.
-    this._onOutside ??= (ev) => {
-      if ((!this._toggled?.size && !this._dialog) || !isOutside(this, ev)) return;
-      this._toggled = new Map();
-      if (this._dialog) this._closeDialog();
-      else this._update();
-    };
-    document.addEventListener("click", this._onOutside, true);
+    this._outside ??= watchOutside(
+      (ev) => isOutside(this, ev),
+      () => {
+        if (!this._toggled?.size && !this._dialog) return;
+        this._toggled = new Map();
+        if (this._dialog) this._closeDialog();
+        else this._update();
+      },
+    );
+    this._outside.on();
     if (this._dialog) window.addEventListener("keydown", this._onKey);
     clearInterval(this._tick);
     this._tick = setInterval(() => {
@@ -2505,9 +2543,13 @@ class GardenCard extends HTMLElement {
     clearInterval(this._tick);
     clearInterval(this._countdown);
     this._tick = this._countdown = null;
-    document.removeEventListener("click", this._onOutside, true);
+    this._outside?.off();
     window.removeEventListener("keydown", this._onKey);
     this._unsubscribeForecast();
+    // Left (another dashboard view, a conditional card hidden): back to the defaults, so that the card does not come
+    // back unfolded or with its popup open.
+    this._toggled = new Map();
+    this._dialog = null;
   }
 
   _t(key, vars) {
@@ -3169,9 +3211,12 @@ class GardenCard extends HTMLElement {
 class GardenMiniCard extends GardenCard {
   constructor() {
     super();
-    this._onUnzoom = (ev) => {
-      if (this._zoomed && isOutside(this, ev)) this._setZoom(false);
-    };
+    this._unzoom = watchOutside(
+      (ev) => isOutside(this, ev),
+      () => {
+        if (this._zoomed) this._setZoom(false);
+      },
+    );
   }
 
   static getConfigElement() {
@@ -3180,12 +3225,14 @@ class GardenMiniCard extends GardenCard {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("click", this._onUnzoom, true);
+    this._unzoom.on();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener("click", this._onUnzoom, true);
+    this._unzoom.off();
+    // Back to the compact view once off the screen (see the full card).
+    this._zoomed = false;
   }
 
   getCardSize() {
