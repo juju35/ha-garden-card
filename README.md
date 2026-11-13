@@ -8,6 +8,17 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/juju35/ha-garden-card/blob/main/LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/julienstep9)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/gardena_smart_system.png" alt="Gardena" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/rainbird.png" alt="Rain Bird" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/opensprinkler.png" alt="OpenSprinkler" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/hydrawise.png" alt="Hunter Hydrawise" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/linktap.png" alt="LinkTap" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/rachio.png" alt="Rachio" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/bhyve.png" alt="Orbit B-hyve" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/xiaomi.png" alt="Xiaomi" width="64">
+</p>
+
 Lovelace cards for Home Assistant for the garden: **watering zones** (valves and switches of [Gardena](https://www.gardena.com), [Rain Bird](https://www.rainbird.com), [OpenSprinkler](https://opensprinkler.com), [Hunter Hydrawise](https://www.hunterindustries.com/hydrawise), [LinkTap](https://www.link-tap.com), [Rachio](https://rachio.com), [Orbit B-hyve](https://bhyve.orbitonline.com), or any valve or switch) with an animated countdown and a timed start, the **next watering**, **plants** with gauges and thresholds (the [plant](https://www.home-assistant.io/integrations/plant/) integration, Mi Flora and other plant sensors), **soil moisture**, and a **"no watering needed, rain expected"** suggestion from the rain forecast of your weather entity.
 
 Zones, plants, soil sensors and the weather entity are **discovered automatically** from the Home Assistant registries: an empty configuration already shows your garden, whatever your Home Assistant language or entity ids. Each of them can also be listed in the configuration, with its own options.
@@ -41,17 +52,17 @@ Zones, plants, soil sensors and the weather entity are **discovered automaticall
 
 | Integration | Devices | What the cards use |
 |---|---|---|
-| [Gardena smart system](https://github.com/py-smart-gardena/hass-gardena-smart-system) (custom, `gardena_smart_system`) | Water Control, Irrigation Control | Valves (zones), started with `gardena_smart_system.valve_open` and the chosen duration |
-| [Gardena Bluetooth](https://www.home-assistant.io/integrations/gardena_bluetooth/) (core) | Water Control Bluetooth, soil moisture sensor | Valve, started for the chosen duration with its *Open for* number (else its manual watering time number, set before opening); remaining time, soil moisture |
-| [Rain Bird](https://www.home-assistant.io/integrations/rainbird/) (core) | Rain Bird controllers | Zone switches, started with `rainbird.start_irrigation` |
-| [OpenSprinkler](https://github.com/vinteo/hass-opensprinkler) (custom, `opensprinkler`) | OpenSprinkler controllers | Stations (`…_station_enabled` switches, master station left out, state from `…_station_running`), started with `opensprinkler.run_station`, stopped with `opensprinkler.stop` |
-| [Hunter Hydrawise](https://www.home-assistant.io/integrations/hydrawise/) (core) | Hydrawise controllers | Zone valves, started with `hydrawise.start_watering` on the zone's watering sensor; next cycle and remaining watering time |
-| [LinkTap](https://github.com/sh00t2kill/linktap_local_http_component) (custom, `linktap`) | LinkTap taps | Valve, started with `linktap.start_watering`; its watering duration number as the default, remaining and total duration |
-| [Rachio](https://www.home-assistant.io/integrations/rachio/) (core) | Rachio controllers | Zone switches (not standby, rain delay or schedules), started with `rachio.start_watering` |
-| [Orbit B-hyve](https://github.com/sebr/bhyve-home-assistant) (custom, `bhyve`) | B-hyve timers and controllers | Zone valves (4.x; zone switches of 3.x), started with `bhyve.start_watering` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/gardena_smart_system.png" alt="" width="16"> [Gardena smart system](https://github.com/py-smart-gardena/hass-gardena-smart-system) (custom, `gardena_smart_system`) | Water Control, Irrigation Control | Valves (zones), started with `gardena_smart_system.valve_open` and the chosen duration |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/gardena_bluetooth.png" alt="" width="16"> [Gardena Bluetooth](https://www.home-assistant.io/integrations/gardena_bluetooth/) (core) | Water Control Bluetooth, soil moisture sensor | Valve, started for the chosen duration with its *Open for* number (else its manual watering time number, set before opening); remaining time, soil moisture |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/rainbird.png" alt="" width="16"> [Rain Bird](https://www.home-assistant.io/integrations/rainbird/) (core) | Rain Bird controllers | Zone switches, started with `rainbird.start_irrigation` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/opensprinkler.png" alt="" width="16"> [OpenSprinkler](https://github.com/vinteo/hass-opensprinkler) (custom, `opensprinkler`) | OpenSprinkler controllers | Stations (`…_station_enabled` switches, master station left out, state from `…_station_running`), started with `opensprinkler.run_station`, stopped with `opensprinkler.stop` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/hydrawise.png" alt="" width="16"> [Hunter Hydrawise](https://www.home-assistant.io/integrations/hydrawise/) (core) | Hydrawise controllers | Zone valves, started with `hydrawise.start_watering` on the zone's watering sensor; next cycle and remaining watering time |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/linktap.png" alt="" width="16"> [LinkTap](https://github.com/sh00t2kill/linktap_local_http_component) (custom, `linktap`) | LinkTap taps | Valve, started with `linktap.start_watering`; its watering duration number as the default, remaining and total duration |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/rachio.png" alt="" width="16"> [Rachio](https://www.home-assistant.io/integrations/rachio/) (core) | Rachio controllers | Zone switches (not standby, rain delay or schedules), started with `rachio.start_watering` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/bhyve.png" alt="" width="16"> [Orbit B-hyve](https://github.com/sebr/bhyve-home-assistant) (custom, `bhyve`) | B-hyve timers and controllers | Zone valves (4.x; zone switches of 3.x), started with `bhyve.start_watering` |
 | Any other valve or switch | ESPHome sprinkler, Zigbee water valves, smart plugs on a pump… | Listed in `zones`: opened and closed; a duration with a duration number of its device or your own script |
 | [Plant](https://www.home-assistant.io/integrations/plant/) (core) and [Plant Monitor](https://github.com/Olen/homeassistant-plant) (custom) | Plants | Readings, the integration's problem verdict, and the Plant Monitor threshold numbers |
-| [Xiaomi BLE](https://www.home-assistant.io/integrations/xiaomi_ble/) and other plant sensors | Mi Flora, Flower Care, Zigbee plant sensors | Devices with soil moisture plus fertility or light become plants |
+| <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/xiaomi.png" alt="" width="16"> [Xiaomi BLE](https://www.home-assistant.io/integrations/xiaomi_ble/) and other plant sensors | Mi Flora, Flower Care, Zigbee plant sensors | Devices with soil moisture plus fertility or light become plants |
 | Any [weather](https://www.home-assistant.io/integrations/weather/) entity | Met.no, Météo-France, OpenWeatherMap… | Hourly (else twice daily or daily) forecast: precipitation and its probability |
 
 The zones of these integrations are found on their own; other valves and switches (a main water shutoff valve is a valve too) are only shown when listed in `zones`. Details in [How it works](#how-it-works).
