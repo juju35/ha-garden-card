@@ -2381,6 +2381,41 @@ const isOutside = (card, ev) => {
   const path = ev.composedPath();
   return !path.includes(card) && !path.some((n) => DIALOG_TAGS.has(n.tagName));
 };
+
+// "A click elsewhere" is caught on the pointer, not only on the click event: on iOS (Safari and the companion app) a
+// tap on something that is not clickable (the background, an empty spot, a card with no action) sends no click to the
+// page. It counts when the press and the release are both outside the card (a slider dragged out of the card does not
+// fold it), and a scroll does not count (the browser cancels the pointer). Keyboard clicks still go through the click
+// event. `tap(ev)` (a press and a release at the same spot) is for the tests.
+const watchOutside = (isOut, handler) => {
+  let downOutside = false;
+  const onDown = (ev) => {
+    downOutside = isOut(ev);
+  };
+  const onUp = (ev) => {
+    if (downOutside && isOut(ev)) handler(ev);
+    downOutside = false;
+  };
+  const onClick = (ev) => {
+    if (ev.detail === 0 && isOut(ev)) handler(ev);
+  };
+  return {
+    on() {
+      document.addEventListener("pointerdown", onDown, true);
+      document.addEventListener("pointerup", onUp, true);
+      document.addEventListener("click", onClick, true);
+    },
+    tap(ev) {
+      onDown(ev);
+      onUp(ev);
+    },
+    off() {
+      document.removeEventListener("pointerdown", onDown, true);
+      document.removeEventListener("pointerup", onUp, true);
+      document.removeEventListener("click", onClick, true);
+    },
+  };
+};
 // After the popup closes, clicks on the card are ignored this long (the second click of a double click on Start).
 const CONFIRM_GUARD_MS = 400;
 // Elements a click acts on, and how one is told from the others across renders (focus kept for keyboard users).
@@ -2400,6 +2435,34 @@ class GardenCard extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this._html = "";
+    // No rewrite of the card between a press and its click: Home Assistant updates the card several times a second,
+    // and a rewrite under the pointer replaces the element pressed, so that the click lands on the card itself and
+    // does nothing. The update held back is drawn once released: by the click (registered before the card's own
+    // handler, which renders at once), else right after the release.
+    this._onPress = () => {
+      this._byPointer = true;
+      this._pressing = true;
+      window.addEventListener("pointerup", this._onPressEnd, true);
+      window.addEventListener("pointercancel", this._onPressEnd, true);
+    };
+    this._onPressEnd = () => {
+      window.removeEventListener("pointerup", this._onPressEnd, true);
+      window.removeEventListener("pointercancel", this._onPressEnd, true);
+      setTimeout(() => {
+        this._pressing = false;
+        if (this._dirty) this._update();
+      }, 0);
+    };
+    this._onPressClick = (ev) => {
+      if (ev.detail === 0) this._byPointer = false;
+      this._pressing = false;
+    };
+    this.shadowRoot.addEventListener("pointerdown", this._onPress);
+    this.shadowRoot.addEventListener("click", this._onPressClick);
+    // From the keyboard, the focus is kept across rewrites (with the pointer it would draw the focus ring).
+    this.shadowRoot.addEventListener("keydown", () => {
+      this._byPointer = false;
+    });
     this.shadowRoot.addEventListener("click", (ev) => this._onClick(ev));
     // Enter / Space on an element with the button role acts as a click, as on a <button>.
     this.shadowRoot.addEventListener("keydown", (ev) => {
@@ -2485,13 +2548,16 @@ class GardenCard extends HTMLElement {
 
   connectedCallback() {
     // A click elsewhere on the page folds the sections back to their defaults and closes the popup.
-    this._onOutside ??= (ev) => {
-      if ((!this._toggled?.size && !this._dialog) || !isOutside(this, ev)) return;
-      this._toggled = new Map();
-      if (this._dialog) this._closeDialog();
-      else this._update();
-    };
-    document.addEventListener("click", this._onOutside, true);
+    this._outside ??= watchOutside(
+      (ev) => isOutside(this, ev),
+      () => {
+        if (!this._toggled?.size && !this._dialog) return;
+        this._toggled = new Map();
+        if (this._dialog) this._closeDialog();
+        else this._update();
+      },
+    );
+    this._outside.on();
     if (this._dialog) window.addEventListener("keydown", this._onKey);
     clearInterval(this._tick);
     this._tick = setInterval(() => {
@@ -2502,12 +2568,19 @@ class GardenCard extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this._pressing = this._dirty = false;
+    window.removeEventListener("pointerup", this._onPressEnd, true);
+    window.removeEventListener("pointercancel", this._onPressEnd, true);
     clearInterval(this._tick);
     clearInterval(this._countdown);
     this._tick = this._countdown = null;
-    document.removeEventListener("click", this._onOutside, true);
+    this._outside?.off();
     window.removeEventListener("keydown", this._onKey);
     this._unsubscribeForecast();
+    // Left (another dashboard view, a conditional card hidden): back to the defaults, so that the card does not come
+    // back unfolded or with its popup open.
+    this._toggled = new Map();
+    this._dialog = null;
   }
 
   _t(key, vars) {
@@ -2705,6 +2778,12 @@ class GardenCard extends HTMLElement {
 
   _update() {
     if (!this._hass || !this._config) return;
+    // Held back under a press (see the constructor): drawn once released.
+    if (this._pressing) {
+      this._dirty = true;
+      return;
+    }
+    this._dirty = false;
     const m = this._resolve();
     if (m) this._subscribeForecast(this._config.show_weather === false ? null : m.weather);
     let html = this._render();
@@ -2713,7 +2792,7 @@ class GardenCard extends HTMLElement {
     }
     if (html !== this._html) {
       const focused = this._dialog && this.shadowRoot.activeElement?.dataset?.action;
-      const kept = this._dialog ? null : this._focusedSpot();
+      const kept = this._dialog || this._byPointer ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
       if (kept) this._restoreFocus(kept);
@@ -3169,9 +3248,12 @@ class GardenCard extends HTMLElement {
 class GardenMiniCard extends GardenCard {
   constructor() {
     super();
-    this._onUnzoom = (ev) => {
-      if (this._zoomed && isOutside(this, ev)) this._setZoom(false);
-    };
+    this._unzoom = watchOutside(
+      (ev) => isOutside(this, ev),
+      () => {
+        if (this._zoomed) this._setZoom(false);
+      },
+    );
   }
 
   static getConfigElement() {
@@ -3180,12 +3262,14 @@ class GardenMiniCard extends GardenCard {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("click", this._onUnzoom, true);
+    this._unzoom.on();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener("click", this._onUnzoom, true);
+    this._unzoom.off();
+    // Back to the compact view once off the screen (see the full card).
+    this._zoomed = false;
   }
 
   getCardSize() {
