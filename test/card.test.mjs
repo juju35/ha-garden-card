@@ -369,6 +369,21 @@ test("visual editor: zone and plant lists edited as entities and devices, YAML o
   assert.ok(gc.window.customCards.some((c) => c.type === "garden-mini-card"));
 });
 
+test("the mini card editor offers the options of its detail view", () => {
+  const names = (schema) => schema.flatMap((s) => (s.schema ? names(s.schema) : [s.name]));
+  const editor = (Editor) => {
+    const ed = new Editor();
+    ed.setConfig({});
+    ed.hass = makeHass();
+    return ed;
+  };
+  const mini = editor(gc.GardenMiniCardEditor);
+  const miniNames = names(mini._form.schema);
+  for (const name of names(editor(gc.GardenCardEditor)._form.schema)) assert.ok(miniNames.includes(name), `mini editor misses ${name}`);
+  for (const name of ["moisture_sensors", "show_subtitle", "show_zones", "show_plants", "show_soil", "collapsed", "zoom"]) assert.ok(miniNames.includes(name), name);
+  assert.equal(mini._form.data.show_soil, true);
+});
+
 test("every clickable element can be reached and used from the keyboard", async () => {
   for (const Card of [gc.GardenCard, gc.GardenMiniCard]) {
     const { html } = await mount({}, {}, Card);

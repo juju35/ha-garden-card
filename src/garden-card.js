@@ -3389,10 +3389,6 @@ class GardenEditorBase extends HTMLElement {
     return [];
   }
 
-  static get full() {
-    return true;
-  }
-
   setConfig(config) {
     this._config = { ...config };
     this._render();
@@ -3405,13 +3401,12 @@ class GardenEditorBase extends HTMLElement {
 
   _schema() {
     const tr = (k) => t(this._hass, this._config, k);
-    const full = this.constructor.full;
     return [
       { name: "title", selector: { text: {} } },
       { name: "zone_entities", selector: { entity: { multiple: true, domain: ["valve", "switch"] } } },
       { name: "plant_entities", selector: { entity: { multiple: true, domain: "plant" } } },
       { name: "plant_devices", selector: { device: { multiple: true, entity: { domain: "sensor", device_class: "moisture" } } } },
-      ...(full ? [{ name: "moisture_sensors", selector: { entity: { multiple: true, domain: "sensor", device_class: "moisture" } } }] : []),
+      { name: "moisture_sensors", selector: { entity: { multiple: true, domain: "sensor", device_class: "moisture" } } },
       { name: "weather", selector: { entity: { domain: "weather" } } },
       { name: "rain_sensor", selector: { entity: { domain: "sensor" } } },
       { name: "next_run", selector: { entity: { domain: ["sensor", "input_datetime", "calendar"] } } },
@@ -3426,14 +3421,10 @@ class GardenEditorBase extends HTMLElement {
         ],
       },
       { type: "grid", name: "", schema: this.constructor.toggles.map(([name]) => ({ name, selector: { boolean: {} } })) },
-      ...(full
-        ? [
-            {
-              name: "collapsed",
-              selector: { select: { multiple: true, mode: "list", options: ["zones", "plants", "soil"].map((value) => ({ value, label: tr(value) })) } },
-            },
-          ]
-        : []),
+      {
+        name: "collapsed",
+        selector: { select: { multiple: true, mode: "list", options: ["zones", "plants", "soil"].map((value) => ({ value, label: tr(value) })) } },
+      },
       { name: "language", selector: { select: { mode: "dropdown", options: [{ value: "", label: tr("lang_auto") }, ...LANGUAGES.map(([value, label]) => ({ value, label }))] } } },
     ];
   }
@@ -3486,17 +3477,10 @@ class GardenCardEditor extends GardenEditorBase {
   }
 }
 
-class GardenMiniCardEditor extends GardenEditorBase {
-  static get full() {
-    return false;
-  }
-
+// The mini card's detail view is the full card: its editor offers the full card's options, plus the detail button.
+class GardenMiniCardEditor extends GardenCardEditor {
   static get toggles() {
-    return [
-      ["show_title", true],
-      ["show_weather", true],
-      ["zoom", true],
-    ];
+    return [...GardenCardEditor.toggles, ["zoom", true]];
   }
 }
 

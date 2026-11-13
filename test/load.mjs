@@ -81,7 +81,8 @@ export const load = ({ now = NOW } = {}) => {
     `${source}
     ({ esc, lang, intlLocale, t, fmtCountdown, fmtWhen, rainOutlook, levelOf, levelClass, posOf, unitMs, timeOf, gardenSvg, resolve, toForm, fromForm,
        PLATFORMS, STRINGS, THRESHOLDS, RUNS, GardenCard: customElements.get("garden-card"), GardenMiniCard: customElements.get("garden-mini-card"),
-       GardenCardEditor: customElements.get("garden-card-editor"), window })`,
+       GardenCardEditor: customElements.get("garden-card-editor"),
+       GardenMiniCardEditor: customElements.get("garden-mini-card-editor"), window })`,
     sandbox,
   );
 };

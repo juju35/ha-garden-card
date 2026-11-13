@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 - 2026-11-14
+
+### Fixes
+- **Mini card visual editor**: its detail view is the full card, but its editor left out the options of the full card. It now offers them too: soil moisture sensors, subtitle, zones, plants and soil sections, and folded sections.
+- **README**: these options are marked as working on both cards.
+
 ## 1.0.1 - 2026-11-13
 
 ### Fixes

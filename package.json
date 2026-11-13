@@ -1,6 +1,6 @@
 {
   "name": "ha-garden-card",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Lovelace cards for Home Assistant for the garden: watering zones (Gardena, Rain Bird, OpenSprinkler, Hydrawise, LinkTap, Rachio, B-hyve, any valve or switch), plants and soil moisture, with a skip-watering suggestion when rain is expected.",
   "private": true,
   "type": "module",
