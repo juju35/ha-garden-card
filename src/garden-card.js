@@ -2337,6 +2337,17 @@ const RUNS = new Map();
 
 // ---------------------------------------------------------------------------
 // Styles
+// The width of an element's whole text in its own font, in fractional pixels (scrollWidth is rounded).
+let textCtx;
+const textWidth = (el) => {
+  const cs = getComputedStyle(el);
+  textCtx ??= document.createElement("canvas").getContext?.("2d");
+  if (!textCtx) return el.scrollWidth;
+  textCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  const pad = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+  return Math.max(el.scrollWidth, textCtx.measureText(el.textContent.trim()).width + pad);
+};
+
 // ---------------------------------------------------------------------------
 
 const BASE_STYLE = `
@@ -2471,10 +2482,11 @@ const BANNER_STYLE = `
   .banner.night .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
   .banner .zoom:hover { background: rgba(255,255,255,.75); }
   .banner.night .zoom:hover { background: rgba(255,255,255,.22); }
-  /* The pill does not fit beside the title (measured, see _fitPill) or a narrow card: a line of its own under the
-     subtitle; narrower still, its dot alone. */
+  /* The whole title and the pill's whole label do not fit on one row (measured, see _fitPill): the pill takes a line
+     of its own under the subtitle, which keeps one line; when that does not fit above the lawn, its dot alone. */
   .titles.below .trow { display: contents; } .banner .titles.below .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; }
-  @container gc-card (max-width: 260px) { .trow { display: contents; } .banner .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; } }
+  .titles.below .sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .banner .titles.dot .chip { padding: 4px; } .banner .titles.dot .chip-text { display: none; }
   @keyframes gc-drift { to { transform: translateX(4px); } }
   @keyframes gc-twinkle { from { opacity: .35; } to { opacity: 1; } }
   /* Narrow card: no room for the scene beside the title, the sky and the lawn stay. */
@@ -2783,17 +2795,37 @@ class GardenCard extends HTMLElement {
     this._fcEntity = undefined;
     if (!this._fitObserver && typeof ResizeObserver === "function") this._fitObserver = new ResizeObserver(() => this._fitPill());
     this._fitObserver?.observe(this);
+    document.fonts?.ready?.then(() => this._fitPill());
     this._update();
   }
 
-  // The banner's status pill keeps its whole label: when it does not fit beside the title (already down to four
-  // characters), it takes a line of its own under the subtitle.
+  // The banner's status pill, measured after each render and on a new width (in every language): it sits on the
+  // title's row, right after the title, only when the whole title and the pill's whole label fit there; otherwise it
+  // takes a line of its own under the subtitle (.below), the title whole on its row (cut only when it does not fit
+  // alone) and the subtitle on one line. When the three lines do not fit in the banner above the lawn, or the label
+  // not on its line, the pill shows its dot alone (.dot): beside the title when the whole title leaves it room, else under the subtitle.
   _fitPill() {
-    const t = this.shadowRoot?.querySelector?.(".htext .titles");
-    if (!t?.classList) return;
-    t.classList.remove("below");
-    const tx = t.querySelector(".trow .chip-text");
-    if (tx && tx.scrollWidth > tx.clientWidth + 0.5) t.classList.add("below");
+    for (const t of this.shadowRoot?.querySelectorAll?.(".htext .titles") || []) {
+      const row = t.querySelector(".trow");
+      const chip = row?.querySelector(".chip");
+      if (!chip?.getBoundingClientRect) continue;
+      t.classList.remove("below", "dot");
+      const name = row.querySelector(".name");
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const room = row.getBoundingClientRect().width;
+      const title = name && getComputedStyle(name).display !== "none" ? textWidth(name) + gap : 0;
+      if (title + chip.getBoundingClientRect().width <= room) continue;
+      t.classList.add("below");
+      const banner = t.closest(".banner");
+      const ground = banner.querySelector(".gc-ground");
+      const floor = ground ? ground.getBoundingClientRect().top : banner.getBoundingClientRect().bottom;
+      const box = t.getBoundingClientRect();
+      const tx = chip.querySelector(".chip-text");
+      const whole = !tx || tx.scrollWidth <= tx.clientWidth + 0.5;
+      if (whole && box.bottom <= floor + 0.5 && box.top >= banner.getBoundingClientRect().top - 0.5) continue;
+      t.classList.add("dot");
+      if (title + chip.getBoundingClientRect().width <= room) t.classList.remove("below");
+    }
   }
 
   disconnectedCallback() {
@@ -3240,7 +3272,7 @@ class GardenCard extends HTMLElement {
     // On the banner the status pill follows the title on its row (under the subtitle on a narrow card).
     const titles = `<div class="titles">
           ${this._illustrated() ? `<div class="trow">${name}${this._chip(st)}</div>` : name}
-          ${sub ? `<div class="sub">${esc(sub)}</div>` : ""}
+          ${sub ? `<div class="sub" title="${esc(sub)}">${esc(sub)}</div>` : ""}
         </div>`;
     const badge = `<div class="type-icon ${icon}">${svgIcon(sum.running.length ? ICONS.sprinkler : ICONS.flower)}</div>`;
     if (this._illustrated()) {
