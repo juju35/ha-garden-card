@@ -7,6 +7,7 @@
 - **Night picture**: moon, stars and a lit window, darker lawn, when `sun.sun` is below the horizon (else with Home Assistant's dark mode); `illustration_theme: day | night` forces one. `illustration: false` keeps the classic header.
 - The header icon's colour always follows the garden's status: blue while watering, red or orange when a plant needs attention, grey at rest.
 - New options in the visual editor of both cards (illustration, illustration theme), translated in every language.
+- The status pill sits on the title's row of the banner, in the status colour on frosted glass (under the subtitle when the title has no room, its dot alone on a very narrow card); the mini card's detail button sits in the banner's top-right corner, on the same glass as the other cards.
 
 ## 1.0.2 - 2026-11-14
 

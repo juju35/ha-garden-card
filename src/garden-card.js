@@ -2344,7 +2344,7 @@ const BASE_STYLE = `
           --gc-crit: var(--error-color, #db4437); --gc-idle: var(--disabled-text-color, #9e9e9e); --gc-active: var(--info-color, #039be5);
           /* Text in a state color is mixed with the text color so that it reads at 4.5:1 at least. */
           --gc-accent-text: color-mix(in srgb, var(--gc-accent) 50%, var(--primary-text-color)); }
-  ha-card { overflow: hidden; container-type: inline-size; }
+  ha-card { overflow: hidden; container: gc-card / inline-size; }
   /* Natural width in a parent that sizes to its content (inline-block, grid "auto" column), without a minimum. */
   :host { display: block; min-width: 0; --gc-natural-width: 380px; }
   :host::before { content: ""; display: grid; grid-template-columns: minmax(0, var(--gc-natural-width)); height: 0; }
@@ -2417,14 +2417,14 @@ const BASE_STYLE = `
   .thirst { animation: gc-thirst 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
   @keyframes gc-thirst { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: .55; } }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } .spray .drop { opacity: .8; } }
-  @container (max-width: 230px) {
+  @container gc-card (max-width: 200px) {
     .chip { padding: 4px; flex: none; }
     .chip-text { display: none; }
     .header { gap: 6px; }
   }
 `;
 
-// The illustrated header (see gcSceneSvg): the scene is 200 × 80 (at most 58 % of the card's width), the lawn strip
+// The illustrated header (see gcSceneSvg): the scene is 200 × 80 (at most 46 % of the card's width), the lawn strip
 // 10 px under it, the icon and the titles on the sky at its left.
 const BANNER_STYLE = `
   .banner { position: relative; overflow: hidden; height: 90px; color: #10283f; --gc-ground: 10px;
@@ -2433,7 +2433,7 @@ const BANNER_STYLE = `
   .gc-ground { position: absolute; left: 0; right: 0; bottom: 0; height: var(--gc-ground);
                background: repeating-linear-gradient(90deg, #5aa83d 0 22px, #6cbb4c 22px 44px); }
   .night .gc-ground { background: repeating-linear-gradient(90deg, #1f4a2a 0 22px, #245433 22px 44px); }
-  .gc-stage { position: absolute; right: 0; bottom: var(--gc-ground); width: min(200px, 58%); aspect-ratio: 5 / 2; }
+  .gc-stage { position: absolute; right: 0; bottom: var(--gc-ground); width: min(200px, 46%); aspect-ratio: 5 / 2; }
   .gc-scene { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .gc-cloud { fill: #fff; opacity: .92; animation: gc-drift 4s ease-in-out infinite alternate; }
   .gc-cloud.gc-slow { animation-duration: 5.5s; animation-delay: -2s; }
@@ -2445,10 +2445,12 @@ const BANNER_STYLE = `
   /* The card's drawn garden (160 × 120), its lawn on the strip at the right of the scene. */
   .gc-art { position: absolute; left: 47.7%; width: 50.3%; bottom: -3.1%; aspect-ratio: 4 / 3; }
   .gc-art img { display: block; width: 100%; height: 100%; }
-  .htext { position: absolute; left: 12px; top: 6px; bottom: calc(var(--gc-ground) + 4px); right: calc(min(200px, 58%) + 4px);
+  .htext { position: absolute; left: 12px; top: 6px; bottom: calc(var(--gc-ground) + 4px); right: calc(min(200px, 46%) + 4px);
            display: flex; align-items: center; gap: 10px; min-width: 0; }
-  .htext .titles { display: flex; flex-direction: column; gap: 1px; align-items: flex-start; }
-  .htext .titles > * { max-width: 100%; }
+  .htext .titles { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 1px; container: gc-titles / inline-size; }
+  /* The status pill on the title's row: the title ellipsises first (4 characters kept), the pill keeps its label. */
+  .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .trow .name { flex: 0 1 auto; min-width: 4.6ch; }
   .htext .name { font-weight: 600; }
   .banner .sub { color: #3d5670; font-size: 13px; }
   .banner.night .sub { color: rgba(255,255,255,.8); }
@@ -2457,16 +2459,20 @@ const BANNER_STYLE = `
   .banner .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 80%, #10283f); }
   .banner.night .type-icon { background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
   .banner.night .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 70%, #fff); }
-  .banner .chip { margin-top: 3px; max-width: 100%; background: rgba(255,255,255,.7); color: color-mix(in srgb, var(--c) 60%, #10283f); }
-  .banner.night .chip { background: rgba(10,20,40,.5); color: color-mix(in srgb, var(--c) 45%, #fff); }
-  .banner .zoom { position: absolute; top: 6px; right: 6px; margin: 0; color: #10283f; background: rgba(255,255,255,.55); }
-  .banner.night .zoom { color: #fff; background: rgba(10,20,40,.45); }
-  .banner .zoom:hover { background: rgba(255,255,255,.8); }
-  .banner.night .zoom:hover { background: rgba(10,20,40,.7); }
+  .banner .chip { flex: none; max-width: 51%; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+  .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
+  .banner .dot { width: 7px; height: 7px; }
+  .banner .zoom { position: absolute; z-index: 2; top: 5px; right: 5px; margin: 0; color: #33506b; background: rgba(255,255,255,.55);
+                  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
+  .banner.night .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .banner .zoom:hover { background: rgba(255,255,255,.75); }
+  .banner.night .zoom:hover { background: rgba(255,255,255,.22); }
+  /* A narrow card: the pill on a line of its own under the subtitle; narrower still, its dot alone. */
+  @container gc-titles (max-width: 150px) { .trow { display: contents; } .banner .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; } }
   @keyframes gc-drift { to { transform: translateX(4px); } }
   @keyframes gc-twinkle { from { opacity: .35; } to { opacity: 1; } }
   /* Narrow card: no room for the scene beside the title, the sky and the lawn stay. */
-  @container (max-width: 240px) { .gc-stage { display: none; } .htext { right: 34px; } }
+  @container gc-card (max-width: 270px) { .gc-stage { display: none; } .htext { right: 34px; } }
   @media (prefers-reduced-motion: reduce) { .gc-cloud, .gc-star { animation: none !important; } }
 `;
 
@@ -3202,10 +3208,11 @@ class GardenCard extends HTMLElement {
     const c = this._config;
     const st = sum.status;
     const icon = sum.running.length ? "active" : st?.cls === "crit" ? "crit" : st?.cls === "warn" ? "warn" : "idle";
+    const name = `<div class="name">${esc(c.title || this._t("garden"))}</div>`;
+    // On the banner the status pill follows the title on its row (under the subtitle on a narrow card).
     const titles = `<div class="titles">
-          <div class="name">${esc(c.title || this._t("garden"))}</div>
+          ${this._illustrated() ? `<div class="trow">${name}${this._chip(st)}</div>` : name}
           ${sub ? `<div class="sub">${esc(sub)}</div>` : ""}
-          ${this._illustrated() ? this._chip(st) : ""}
         </div>`;
     const badge = `<div class="type-icon ${icon}">${svgIcon(sum.running.length ? ICONS.sprinkler : ICONS.flower)}</div>`;
     if (this._illustrated()) {
