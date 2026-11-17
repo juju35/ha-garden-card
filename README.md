@@ -187,7 +187,7 @@ language: en
 |---|---|---|---|
 | `title` | both | Garden | Card title |
 | `illustration` | both | `true` | Illustrated header: the animated garden scene on a 90 px banner with its lawn strip; `false` for the classic header (and the garden picture in the card's body) |
-| `illustration_theme` | both | `auto` | Day or night picture of the header: `auto` (night when `sun.sun` is below the horizon, else with Home Assistant's dark mode), `day` or `night` |
+| `illustration_theme` | both | `auto` | Day or night picture of the header: `auto` (night when `sun.sun` is below the horizon or Home Assistant's theme is dark), `day` or `night` |
 | `show_title` | both | `true` | Show the title in the header |
 | `show_subtitle` | both | `true` | Show the subtitle (next watering, or the number of zones and plants) |
 | `zones` | both | Automatic | Watering zones: entity ids of valves or switches, or objects (see [Zone options](#zone-options)); empty or absent, the zones of the [supported integrations](#supported-integrations) |

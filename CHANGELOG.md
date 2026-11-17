@@ -4,10 +4,11 @@
 
 ### Features
 - **Illustrated header** on the full and the mini card: a 90 px banner with the title and the status on the sky at the left, the card's own drawn garden (sprinkler spraying, rain cloud, wilting plant) at the right in front of hills, a house and a tree, and a 10 px lawn strip edge to edge at the bottom. The garden picture moves from the card's body to the banner.
-- **Night picture**: moon, stars and a lit window, darker lawn, when `sun.sun` is below the horizon (else with Home Assistant's dark mode); `illustration_theme: day | night` forces one. `illustration: false` keeps the classic header.
+- **Night picture**: moon, stars and a lit window, darker lawn, when `sun.sun` is below the horizon or with Home Assistant's dark mode; `illustration_theme: day | night` forces one. `illustration: false` keeps the classic header.
 - The header icon's colour always follows the garden's status: blue while watering, red or orange when a plant needs attention, grey at rest.
 - New options in the visual editor of both cards (illustration, illustration theme), translated in every language.
 - The status pill sits on the title's row of the banner, in the status colour on frosted glass (under the subtitle when the title has no room, its dot alone on a very narrow card); the mini card's detail button sits in the banner's top-right corner, on the same glass as the other cards. The scene narrows so that the pill stays beside the title from 400 px, and stands lower and smaller under the detail button.
+- Night picture with the dark theme even while the sun is up.
 
 ## 1.0.2 - 2026-11-14
 

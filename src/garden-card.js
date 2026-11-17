@@ -1924,7 +1924,7 @@ const gardenSvg = (activity = null, night = false) => {
 // ---------------------------------------------------------------------------
 // The illustrated header: a 90 px banner, the title on the sky at its left, a garden scene at its right (hills, a
 // house and a tree behind the card's own drawn garden above) and a 10 px lawn strip edge to edge at the bottom.
-// Day or night: forced by `illustration_theme`, else the sun below the horizon, else Home Assistant's dark mode.
+// Day or night: forced by `illustration_theme`, else the sun below the horizon or Home Assistant's dark theme (dark mode alone without a valid sun.sun).
 // ---------------------------------------------------------------------------
 
 const GC_STARS = [
@@ -1957,7 +1957,7 @@ const gcIsNight = (hass, config) => {
   if (theme === "night") return true;
   if (theme === "day") return false;
   const sunState = hass?.states?.["sun.sun"]?.state;
-  if (sunState && !["unknown", "unavailable"].includes(sunState)) return sunState === "below_horizon";
+  if (sunState && !["unknown", "unavailable"].includes(sunState)) return sunState === "below_horizon" || !!hass?.themes?.darkMode;
   return !!hass?.themes?.darkMode;
 };
 
