@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 - 2026-11-17
+
+### Features
+- **Illustrated header** on the full and the mini card: a 90 px banner with the title and the status on the sky at the left, the card's own drawn garden (sprinkler spraying, rain cloud, wilting plant) at the right in front of hills, a house and a tree, and a 10 px lawn strip edge to edge at the bottom. The garden picture moves from the card's body to the banner.
+- **Night picture**: moon, stars and a lit window, darker lawn, when `sun.sun` is below the horizon (else with Home Assistant's dark mode); `illustration_theme: day | night` forces one. `illustration: false` keeps the classic header.
+- The header icon's colour always follows the garden's status: blue while watering, red or orange when a plant needs attention, grey at rest.
+- New options in the visual editor of both cards (illustration, illustration theme), translated in every language.
+
 ## 1.0.2 - 2026-11-14
 
 ### Fixes
