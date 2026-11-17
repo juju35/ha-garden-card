@@ -325,7 +325,7 @@ The detail button (top right) shows the full card's content:
 
 ### Narrow cards
 
-The full card at 6 columns of a phone's Sections view (the gauge labels give way to the bars, the zone buttons keep their icon) and the mini card at its minimum width:
+The full card at 6 columns of a phone's Sections view (in a narrow plant tile the gauge labels give way to the bars, named in their tooltip; the zone buttons keep their icon) and the mini card at its minimum width:
 
 | Light | Dark |
 |---|---|

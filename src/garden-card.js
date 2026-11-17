@@ -2525,19 +2525,30 @@ const FULL_STYLE = `
   .zone .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .zone .zname { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .plants { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 8px; }
-  .plant { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border-radius: 12px; min-width: 0;
-           border: 1px solid var(--divider-color, rgba(127,127,127,.25)); }
+  .plant { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 12px; min-width: 0; box-sizing: border-box;
+           container: gc-plant / inline-size; background: var(--secondary-background-color, rgba(127,127,127,.1)); }
   .plant-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  /* The name first: the status chip follows it when there is room, else it goes under it (never the name cut for it). */
+  .plant-titles { flex: 1 1 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
   .plant-pic { width: 32px; height: 32px; border-radius: 50%; flex: none; display: grid; place-items: center; overflow: hidden;
                background: color-mix(in srgb, var(--c, var(--gc-ok)) 16%, transparent); color: color-mix(in srgb, var(--c, var(--gc-ok)) 60%, var(--primary-text-color)); position: relative; }
   .plant-pic img { width: 100%; height: 100%; object-fit: cover; }
   .plant-pic .icon { width: 20px; height: 20px; }
   .plant-pic .badge { position: absolute; right: -1px; bottom: -1px; width: 14px; height: 14px; color: var(--gc-crit); }
-  .plant-name { flex: 1; min-width: 0; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .plant-name { min-width: 6ch; }
-  .plant-head .chip { max-width: 50%; }
-  .gauges { display: flex; flex-direction: column; gap: 4px; }
-  .gauge { display: grid; grid-template-columns: 16px minmax(0, 1fr) minmax(48px, 1.2fr) auto; align-items: center; gap: 6px; font-size: 12px; min-width: 0; }
+  .plant-name { flex: 0 1 auto; min-width: 0; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .plant-titles .chip { flex: 0 1 auto; min-width: 0; max-width: 100%; }
+  .plant-titles .chip-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* The rows of a tile (and of the soil section) share their columns: icon, label, bar, value, so every bar starts and
+     ends at the same place. */
+  .gauges, .soil { display: grid; grid-template-columns: 16px max-content minmax(48px, 1fr) minmax(6em, max-content); gap: 5px 6px; min-width: 0; }
+  .soil { grid-template-columns: 16px minmax(0, max-content) minmax(60px, 1fr) max-content; }
+  .plant .track .mark { box-shadow: 0 0 0 2px var(--secondary-background-color, #ececec); }
+  .gauge { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; font-size: 12px; min-width: 0; }
+  /* A tile too narrow for the labels: the icons alone (the label and the range in the tooltip), the bars wider. */
+  @container gc-plant (max-width: 299px) {
+    .gauges { grid-template-columns: 16px minmax(40px, 1fr) minmax(6em, max-content); }
+    .gauges .lbl { display: none; }
+  }
   .gauge > .icon { width: 16px; height: 16px; color: var(--secondary-text-color); }
   .gauge .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--secondary-text-color); }
   .gauge .v { text-align: right; font-weight: 500; white-space: nowrap; min-width: 4ch; }
@@ -2547,13 +2558,10 @@ const FULL_STYLE = `
   .track .band { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: color-mix(in srgb, var(--gc-ok) 40%, transparent); }
   .track .mark { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--c, var(--gc-ok));
                  box-shadow: 0 0 0 2px var(--card-background-color, #fff); box-sizing: border-box; }
-  .soil { display: flex; flex-direction: column; gap: 4px; }
-  /* Narrow card: the gauge labels give way to the bars (the icon says which reading), the zone button keeps its icon. */
+  /* Narrow card: a smaller picture, the zone button keeps its icon. */
   @container (max-width: 300px) {
     .picture { width: 80px; height: 60px; }
     .hero { gap: 10px; }
-    .gauge { grid-template-columns: 16px minmax(40px, 1fr) auto; }
-    .gauge .lbl { display: none; }
     .zone .btn:not(.round) span { display: none; }
     .zone .btn:not(.round) { width: 34px; height: 34px; padding: 0; border-radius: 50%; flex: none; }
   }
@@ -3457,8 +3465,7 @@ class GardenCard extends HTMLElement {
     return `<div class="plant">
       <div class="plant-head${target ? " clickable" : ""}"${moreInfo(target)}>
         <div class="plant-pic ${st.cls}">${pic}${badge}</div>
-        <div class="plant-name">${esc(p.name)}</div>
-        <span class="chip ${st.cls}" title="${esc(st.text)}"><span class="dot"></span><span class="chip-text">${esc(st.text)}</span></span>
+        <div class="plant-titles"><div class="plant-name" title="${esc(p.name)}">${esc(p.name)}</div><span class="chip ${st.cls}" title="${esc(st.text)}"><span class="dot"></span><span class="chip-text">${esc(st.text)}</span></span></div>
       </div>
       ${gauges.length ? `<div class="gauges">${gauges.join("")}</div>` : ""}
     </div>`;

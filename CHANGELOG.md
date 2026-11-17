@@ -10,6 +10,9 @@
 - The status pill sits on the title's row of the banner, in the status colour on frosted glass (under the subtitle when the title has no room, its dot alone on a very narrow card); the mini card's detail button sits in the banner's top-right corner, on the same glass as the other cards. The scene narrows so that the pill stays beside the title from 400 px, and stands lower and smaller under the detail button.
 - Night picture with the dark theme even while the sun is up.
 
+### Fixes
+- **Plant tiles**: the plant's name is whole, its status chip goes under it when both do not fit; the readings of a tile share their columns, so every bar starts and ends at the same place (across tiles too); a tile narrower than 300 px shows the reading icons without their labels (named in the tooltip) instead of cutting them (« Temper… »); the tiles are filled like the other sections and the soil sensors keep their names on a narrow card.
+
 ## 1.0.2 - 2026-11-14
 
 ### Fixes
