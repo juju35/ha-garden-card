@@ -35,7 +35,7 @@ Zones, plants, soil sensors and the weather entity are **discovered automaticall
 
 - Two cards: a full **Garden Card** (`custom:garden-card`) and a compact **Garden Mini Card** (`custom:garden-mini-card`)
 - Drawn garden (lawn, pop-up sprinkler, potted plant, sky) animated by what goes on: the sprinkler sprays while a zone waters, a cloud rains when watering is not needed, the plant wilts under a burning sun when one of your plants is thirsty (see [Animations](#animations))
-- **Illustrated header** (90 px, full and mini card): the title on the sky at the left, the drawn garden at the right in front of hills, a house and a tree, on a lawn strip edge to edge; night picture (moon, stars, lit window) when the sun is down or the theme is dark, or forced with `illustration_theme`; `illustration: false` brings back the classic header
+- **Illustrated header** (90 px, full and mini card): the title on the sky at the left, the drawn garden at the right in front of hills, a house and a tree, on a lawn strip edge to edge; night picture (moon, stars, lit window) with a dark theme (a light theme keeps the day picture after sunset), or forced with `illustration_theme`; `illustration: false` brings back the classic header
 - Header icon in a round badge, in the color of the garden's state (blue watering, red a plant needs water, orange a plant needs attention, grey at rest), and a status chip under the title
 - **Watering zones**: state, next run, soil moisture of the zone, and while it waters a ring that counts down second by second with water spraying from the zone's icon; **Start** opens a popup at the top of the card to pick the duration (presets 5 to 60 min, or minute by minute), **Stop** ends the run
 - Each integration is started its own way (Rain Bird, Rachio and B-hyve services in minutes, Gardena smart system and OpenSprinkler in seconds, Hydrawise on its watering sensor, the watering duration number of LinkTap and Gardena Bluetooth), or with a script of your own (see [Starting a zone](#starting-a-zone))
@@ -187,7 +187,7 @@ language: en
 |---|---|---|---|
 | `title` | both | Garden | Card title |
 | `illustration` | both | `true` | Illustrated header: the animated garden scene on a 90 px banner with its lawn strip; `false` for the classic header (and the garden picture in the card's body) |
-| `illustration_theme` | both | `auto` | Day or night picture of the header: `auto` (night when `sun.sun` is below the horizon or Home Assistant's theme is dark), `day` or `night` |
+| `illustration_theme` | both | `auto` | Day or night picture of the header: `auto` (follows the Home Assistant theme: night with a dark theme, day with a light theme), `day` or `night` |
 | `show_title` | both | `true` | Show the title in the header |
 | `show_subtitle` | both | `true` | Show the subtitle (next watering, or the number of zones and plants) |
 | `zones` | both | Automatic | Watering zones: entity ids of valves or switches, or objects (see [Zone options](#zone-options)); empty or absent, the zones of the [supported integrations](#supported-integrations) |
