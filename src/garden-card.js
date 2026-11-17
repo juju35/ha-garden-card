@@ -2433,7 +2433,11 @@ const BANNER_STYLE = `
   .gc-ground { position: absolute; left: 0; right: 0; bottom: 0; height: var(--gc-ground);
                background: repeating-linear-gradient(90deg, #5aa83d 0 22px, #6cbb4c 22px 44px); }
   .night .gc-ground { background: repeating-linear-gradient(90deg, #1f4a2a 0 22px, #245433 22px 44px); }
-  .gc-stage { position: absolute; right: 0; bottom: var(--gc-ground); width: min(200px, 46%); aspect-ratio: 5 / 2; }
+  /* The scene leaves the title row room for the title and its pill (at least 250 px of the card); with the detail
+     button in the corner, it stands lower and smaller, under the button. */
+  .banner { --gc-stage-w: min(200px, 46%, max(40%, 100% - 250px)); }
+  .banner:has(> .zoom) { --gc-stage-w: min(135px, 40%); }
+  .gc-stage { position: absolute; right: 0; bottom: var(--gc-ground); width: var(--gc-stage-w); aspect-ratio: 5 / 2; }
   .gc-scene { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .gc-cloud { fill: #fff; opacity: .92; animation: gc-drift 4s ease-in-out infinite alternate; }
   .gc-cloud.gc-slow { animation-duration: 5.5s; animation-delay: -2s; }
@@ -2445,7 +2449,7 @@ const BANNER_STYLE = `
   /* The card's drawn garden (160 × 120), its lawn on the strip at the right of the scene. */
   .gc-art { position: absolute; left: 47.7%; width: 50.3%; bottom: -3.1%; aspect-ratio: 4 / 3; }
   .gc-art img { display: block; width: 100%; height: 100%; }
-  .htext { position: absolute; left: 12px; top: 6px; bottom: calc(var(--gc-ground) + 4px); right: calc(min(200px, 46%) + 4px);
+  .htext { position: absolute; left: 12px; top: 6px; bottom: calc(var(--gc-ground) + 4px); right: calc(var(--gc-stage-w) + 4px);
            display: flex; align-items: center; gap: 10px; min-width: 0; }
   .htext .titles { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 1px; container: gc-titles / inline-size; }
   /* The status pill on the title's row: the title ellipsises first (4 characters kept), the pill keeps its label. */
@@ -2459,7 +2463,7 @@ const BANNER_STYLE = `
   .banner .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 80%, #10283f); }
   .banner.night .type-icon { background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
   .banner.night .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 70%, #fff); }
-  .banner .chip { flex: none; max-width: 51%; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+  .banner .chip { flex: none; max-width: none; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
   .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
   .banner .dot { width: 7px; height: 7px; }
   .banner .zoom { position: absolute; z-index: 2; top: 5px; right: 5px; margin: 0; color: #33506b; background: rgba(255,255,255,.55);
@@ -2467,8 +2471,10 @@ const BANNER_STYLE = `
   .banner.night .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
   .banner .zoom:hover { background: rgba(255,255,255,.75); }
   .banner.night .zoom:hover { background: rgba(255,255,255,.22); }
-  /* A narrow card: the pill on a line of its own under the subtitle; narrower still, its dot alone. */
-  @container gc-titles (max-width: 150px) { .trow { display: contents; } .banner .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; } }
+  /* The pill does not fit beside the title (measured, see _fitPill) or a narrow card: a line of its own under the
+     subtitle; narrower still, its dot alone. */
+  .titles.below .trow { display: contents; } .banner .titles.below .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; }
+  @container gc-card (max-width: 260px) { .trow { display: contents; } .banner .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; } }
   @keyframes gc-drift { to { transform: translateX(4px); } }
   @keyframes gc-twinkle { from { opacity: .35; } to { opacity: 1; } }
   /* Narrow card: no room for the scene beside the title, the sky and the lawn stay. */
@@ -2767,7 +2773,19 @@ class GardenCard extends HTMLElement {
       if (this._hass) this.hass = this._hass;
     }, 60000);
     this._fcEntity = undefined;
+    if (!this._fitObserver && typeof ResizeObserver === "function") this._fitObserver = new ResizeObserver(() => this._fitPill());
+    this._fitObserver?.observe(this);
     this._update();
+  }
+
+  // The banner's status pill keeps its whole label: when it does not fit beside the title (already down to four
+  // characters), it takes a line of its own under the subtitle.
+  _fitPill() {
+    const t = this.shadowRoot?.querySelector?.(".htext .titles");
+    if (!t?.classList) return;
+    t.classList.remove("below");
+    const tx = t.querySelector(".trow .chip-text");
+    if (tx && tx.scrollWidth > tx.clientWidth + 0.5) t.classList.add("below");
   }
 
   disconnectedCallback() {
@@ -2777,6 +2795,7 @@ class GardenCard extends HTMLElement {
     clearInterval(this._tick);
     clearInterval(this._countdown);
     this._tick = this._countdown = null;
+    this._fitObserver?.disconnect();
     this._outside?.off();
     window.removeEventListener("keydown", this._onKey);
     this._unsubscribeForecast();
@@ -2998,6 +3017,7 @@ class GardenCard extends HTMLElement {
       const kept = this._dialog || this._byPointer ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
+      this._fitPill();
       if (kept) this._restoreFocus(kept);
       if (this._dialog) {
         const sel = focused ? `.modal [data-action="${focused}"]${focused === "dur_preset" ? "" : ""}` : ".modal .primary";
