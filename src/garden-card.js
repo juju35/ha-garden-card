@@ -2486,7 +2486,7 @@ const BANNER_STYLE = `
      of its own under the subtitle, which keeps one line; when that does not fit above the lawn, its dot alone. */
   .titles.below .trow { display: contents; } .banner .titles.below .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; }
   .titles.below .sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .banner .titles.dot .chip { padding: 4px; } .banner .titles.dot .chip-text { display: none; }
+  .banner .titles.dot-only .chip { padding: 4px; } .banner .titles.dot-only .chip-text { display: none; }
   @keyframes gc-drift { to { transform: translateX(4px); } }
   @keyframes gc-twinkle { from { opacity: .35; } to { opacity: 1; } }
   /* Narrow card: no room for the scene beside the title, the sky and the lawn stay. */
@@ -2803,13 +2803,13 @@ class GardenCard extends HTMLElement {
   // title's row, right after the title, only when the whole title and the pill's whole label fit there; otherwise it
   // takes a line of its own under the subtitle (.below), the title whole on its row (cut only when it does not fit
   // alone) and the subtitle on one line. When the three lines do not fit in the banner above the lawn, or the label
-  // not on its line, the pill shows its dot alone (.dot): beside the title when the whole title leaves it room, else under the subtitle.
+  // not on its line, the pill shows its dot alone (.dot-only): beside the title when the whole title leaves it room, else under the subtitle.
   _fitPill() {
     for (const t of this.shadowRoot?.querySelectorAll?.(".htext .titles") || []) {
       const row = t.querySelector(".trow");
       const chip = row?.querySelector(".chip");
       if (!chip?.getBoundingClientRect) continue;
-      t.classList.remove("below", "dot");
+      t.classList.remove("below", "dot-only");
       const name = row.querySelector(".name");
       const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
       const room = row.getBoundingClientRect().width;
@@ -2823,7 +2823,7 @@ class GardenCard extends HTMLElement {
       const tx = chip.querySelector(".chip-text");
       const whole = !tx || tx.scrollWidth <= tx.clientWidth + 0.5;
       if (whole && box.bottom <= floor + 0.5 && box.top >= banner.getBoundingClientRect().top - 0.5) continue;
-      t.classList.add("dot");
+      t.classList.add("dot-only");
       if (title + chip.getBoundingClientRect().width <= room) t.classList.remove("below");
     }
   }
