@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.0 - 2026-11-17
+
+### Features
+- **Illustrated header** on the full and the mini card: a 90 px banner with the title and the status on the sky at the left, the card's own drawn garden (sprinkler spraying, rain cloud, wilting plant) at the right in front of hills, a house and a tree, and a 10 px lawn strip edge to edge at the bottom. The garden picture moves from the card's body to the banner.
+- **Night picture**: moon, stars and a lit window, darker lawn, when `sun.sun` is below the horizon or with Home Assistant's dark mode; `illustration_theme: day | night` forces one. `illustration: false` keeps the classic header.
+- The header icon's colour always follows the garden's status: blue while watering, red or orange when a plant needs attention, grey at rest.
+- New options in the visual editor of both cards (illustration, illustration theme), translated in every language.
+- The status pill sits on the title's row of the banner, right after the whole title, in the status colour on frosted glass; when the whole title and the pill's whole label do not both fit on that row (measured, in every language), the pill takes a line of its own under the subtitle (the subtitle then on one line), and shows its dot alone when its label does not fit in the banner above the lawn or on a card of 200 px or less; the mini card's detail button sits in the banner's top-right corner, on the same glass as the other cards. The scene narrows so that the pill stays beside the title from 400 px, and stands lower and smaller under the detail button.
+- Night picture with the dark theme even while the sun is up.
+
+### Fixes
+- **Plant tiles**: the plant's name is whole, its status chip goes under it when both do not fit; the readings of a tile share their columns, so every bar starts and ends at the same place (across tiles too); a tile narrower than 300 px shows the reading icons without their labels (named in the tooltip) instead of cutting them (« Temper… »); the tiles are filled like the other sections and the soil sensors keep their names on a narrow card.
+
 ## 1.0.2 - 2026-11-14
 
 ### Fixes

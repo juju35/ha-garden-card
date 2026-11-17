@@ -396,3 +396,19 @@ test("every clickable element can be reached and used from the keyboard", async 
     }
   }
 });
+
+test("night picture: the sun below the horizon or a dark theme, even with the sun up; illustration_theme forces it", async () => {
+  const night = async (sun, darkMode, config = {}) => {
+    const { card, hass } = await mount(config, sun ? { extraStates: { "sun.sun": { entity_id: "sun.sun", state: sun, attributes: {} } } } : {});
+    card.hass = { ...hass, themes: { darkMode } };
+    await new Promise((r) => setTimeout(r, 0));
+    return /class="banner night"/.test(card.shadowRoot.innerHTML);
+  };
+  assert.equal(await night("below_horizon", false), true);
+  assert.equal(await night("above_horizon", true), true);
+  assert.equal(await night("above_horizon", false), false);
+  assert.equal(await night("unavailable", true), true);
+  assert.equal(await night(null, false), false);
+  assert.equal(await night("above_horizon", true, { illustration_theme: "day" }), false);
+  assert.equal(await night("above_horizon", false, { illustration_theme: "night" }), true);
+});

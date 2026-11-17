@@ -200,6 +200,11 @@ const STRINGS = {
     zoom_helper: "Switches the mini card to the full card's content",
     language: "Language",
     lang_auto: "Automatic",
+    illustration: "Animated illustration",
+    illustration_theme: "Illustration theme",
+    theme_auto: "Automatic (sun or dark theme)",
+    theme_day: "Day",
+    theme_night: "Night",
   },
   fr: {
     garden: "Jardin",
@@ -272,6 +277,11 @@ const STRINGS = {
     zoom_helper: "Bascule la mini-carte vers le contenu de la carte complète",
     language: "Langue",
     lang_auto: "Automatique",
+    illustration: "Illustration animée",
+    illustration_theme: "Thème de l’illustration",
+    theme_auto: "Automatique (soleil ou thème sombre)",
+    theme_day: "Jour",
+    theme_night: "Nuit",
   },
   de: {
     garden: "Garten",
@@ -344,6 +354,11 @@ const STRINGS = {
     zoom_helper: "Schaltet die Mini-Karte auf den Inhalt der vollen Karte um",
     language: "Sprache",
     lang_auto: "Automatisch",
+    illustration: "Animierte Illustration",
+    illustration_theme: "Thema der Illustration",
+    theme_auto: "Automatisch (Sonne oder dunkles Design)",
+    theme_day: "Tag",
+    theme_night: "Nacht",
   },
   es: {
     garden: "Jardín",
@@ -416,6 +431,11 @@ const STRINGS = {
     zoom_helper: "Cambia la minitarjeta al contenido de la tarjeta completa",
     language: "Idioma",
     lang_auto: "Automático",
+    illustration: "Ilustración animada",
+    illustration_theme: "Tema de la ilustración",
+    theme_auto: "Automático (sol o tema oscuro)",
+    theme_day: "Día",
+    theme_night: "Noche",
   },
   it: {
     garden: "Giardino",
@@ -488,6 +508,11 @@ const STRINGS = {
     zoom_helper: "Passa la mini scheda al contenuto della scheda completa",
     language: "Lingua",
     lang_auto: "Automatica",
+    illustration: "Illustrazione animata",
+    illustration_theme: "Tema dell’illustrazione",
+    theme_auto: "Automatico (sole o tema scuro)",
+    theme_day: "Giorno",
+    theme_night: "Notte",
   },
   nl: {
     garden: "Tuin",
@@ -560,6 +585,11 @@ const STRINGS = {
     zoom_helper: "Schakelt de minikaart naar de inhoud van de volledige kaart",
     language: "Taal",
     lang_auto: "Automatisch",
+    illustration: "Geanimeerde illustratie",
+    illustration_theme: "Thema van de illustratie",
+    theme_auto: "Automatisch (zon of donker thema)",
+    theme_day: "Dag",
+    theme_night: "Nacht",
   },
   pt: {
     garden: "Jardim",
@@ -632,6 +662,11 @@ const STRINGS = {
     zoom_helper: "Muda o minicartão para o conteúdo do cartão completo",
     language: "Idioma",
     lang_auto: "Automático",
+    illustration: "Ilustração animada",
+    illustration_theme: "Tema da ilustração",
+    theme_auto: "Automático (sol ou tema escuro)",
+    theme_day: "Dia",
+    theme_night: "Noite",
   },
   pl: {
     garden: "Ogród",
@@ -704,6 +739,11 @@ const STRINGS = {
     zoom_helper: "Przełącza minikartę na zawartość pełnej karty",
     language: "Język",
     lang_auto: "Automatycznie",
+    illustration: "Animowana ilustracja",
+    illustration_theme: "Motyw ilustracji",
+    theme_auto: "Automatycznie (słońce lub ciemny motyw)",
+    theme_day: "Dzień",
+    theme_night: "Noc",
   },
   sr: {
     garden: "Башта",
@@ -776,6 +816,11 @@ const STRINGS = {
     zoom_helper: "Пребацује мини картицу на садржај пуне картице",
     language: "Језик",
     lang_auto: "Аутоматски",
+    illustration: "Анимирана илустрација",
+    illustration_theme: "Тема илустрације",
+    theme_auto: "Аутоматски (сунце или тамна тема)",
+    theme_day: "Дан",
+    theme_night: "Ноћ",
   },
   "sr-Latn": {
     garden: "Bašta",
@@ -848,6 +893,11 @@ const STRINGS = {
     zoom_helper: "Prebacuje mini karticu na sadržaj pune kartice",
     language: "Jezik",
     lang_auto: "Automatski",
+    illustration: "Animirana ilustracija",
+    illustration_theme: "Tema ilustracije",
+    theme_auto: "Automatski (sunce ili tamna tema)",
+    theme_day: "Dan",
+    theme_night: "Noć",
   },
   ro: {
     garden: "Grădină",
@@ -920,6 +970,11 @@ const STRINGS = {
     zoom_helper: "Comută mini cardul la conținutul cardului complet",
     language: "Limbă",
     lang_auto: "Automat",
+    illustration: "Ilustrație animată",
+    illustration_theme: "Tema ilustrației",
+    theme_auto: "Automat (soare sau temă întunecată)",
+    theme_day: "Zi",
+    theme_night: "Noapte",
   },
   da: {
     garden: "Have",
@@ -992,6 +1047,11 @@ const STRINGS = {
     zoom_helper: "Skifter minikortet til det fulde korts indhold",
     language: "Sprog",
     lang_auto: "Automatisk",
+    illustration: "Animeret illustration",
+    illustration_theme: "Illustrationens tema",
+    theme_auto: "Automatisk (sol eller mørkt tema)",
+    theme_day: "Dag",
+    theme_night: "Nat",
   },
   sv: {
     garden: "Trädgård",
@@ -1064,6 +1124,11 @@ const STRINGS = {
     zoom_helper: "Växlar minikortet till hela kortets innehåll",
     language: "Språk",
     lang_auto: "Automatiskt",
+    illustration: "Animerad illustration",
+    illustration_theme: "Illustrationens tema",
+    theme_auto: "Automatiskt (sol eller mörkt tema)",
+    theme_day: "Dag",
+    theme_night: "Natt",
   },
   bg: {
     garden: "Градина",
@@ -1136,6 +1201,11 @@ const STRINGS = {
     zoom_helper: "Превключва мини картата към съдържанието на пълната карта",
     language: "Език",
     lang_auto: "Автоматично",
+    illustration: "Анимирана илюстрация",
+    illustration_theme: "Тема на илюстрацията",
+    theme_auto: "Автоматично (слънце или тъмна тема)",
+    theme_day: "Ден",
+    theme_night: "Нощ",
   },
   ru: {
     garden: "Сад",
@@ -1208,6 +1278,11 @@ const STRINGS = {
     zoom_helper: "Переключает мини-карточку на содержимое полной карточки",
     language: "Язык",
     lang_auto: "Автоматически",
+    illustration: "Анимированная иллюстрация",
+    illustration_theme: "Тема иллюстрации",
+    theme_auto: "Автоматически (солнце или тёмная тема)",
+    theme_day: "День",
+    theme_night: "Ночь",
   },
   uk: {
     garden: "Сад",
@@ -1280,6 +1355,11 @@ const STRINGS = {
     zoom_helper: "Перемикає міні-картку на вміст повної картки",
     language: "Мова",
     lang_auto: "Автоматично",
+    illustration: "Анімована ілюстрація",
+    illustration_theme: "Тема ілюстрації",
+    theme_auto: "Автоматично (сонце або темна тема)",
+    theme_day: "День",
+    theme_night: "Ніч",
   },
   hu: {
     garden: "Kert",
@@ -1352,6 +1432,11 @@ const STRINGS = {
     zoom_helper: "A minikártyát a teljes kártya tartalmára váltja",
     language: "Nyelv",
     lang_auto: "Automatikus",
+    illustration: "Animált illusztráció",
+    illustration_theme: "Az illusztráció témája",
+    theme_auto: "Automatikus (nap vagy sötét téma)",
+    theme_day: "Nappal",
+    theme_night: "Éjszaka",
   },
   sk: {
     garden: "Záhrada",
@@ -1424,6 +1509,11 @@ const STRINGS = {
     zoom_helper: "Prepne mini kartu na obsah úplnej karty",
     language: "Jazyk",
     lang_auto: "Automaticky",
+    illustration: "Animovaná ilustrácia",
+    illustration_theme: "Téma ilustrácie",
+    theme_auto: "Automaticky (slnko alebo tmavá téma)",
+    theme_day: "Deň",
+    theme_night: "Noc",
   },
   cs: {
     garden: "Zahrada",
@@ -1496,6 +1586,11 @@ const STRINGS = {
     zoom_helper: "Přepne mini kartu na obsah plné karty",
     language: "Jazyk",
     lang_auto: "Automaticky",
+    illustration: "Animovaná ilustrace",
+    illustration_theme: "Motiv ilustrace",
+    theme_auto: "Automaticky (slunce nebo tmavý motiv)",
+    theme_day: "Den",
+    theme_night: "Noc",
   },
   sl: {
     garden: "Vrt",
@@ -1568,6 +1663,11 @@ const STRINGS = {
     zoom_helper: "Preklopi mini kartico na vsebino polne kartice",
     language: "Jezik",
     lang_auto: "Samodejno",
+    illustration: "Animirana ilustracija",
+    illustration_theme: "Tema ilustracije",
+    theme_auto: "Samodejno (sonce ali temna tema)",
+    theme_day: "Dan",
+    theme_night: "Noč",
   },
   lv: {
     garden: "Dārzs",
@@ -1640,6 +1740,11 @@ const STRINGS = {
     zoom_helper: "Pārslēdz mini kartīti uz pilnās kartītes saturu",
     language: "Valoda",
     lang_auto: "Automātiski",
+    illustration: "Animēta ilustrācija",
+    illustration_theme: "Ilustrācijas motīvs",
+    theme_auto: "Automātiski (saule vai tumšā tēma)",
+    theme_day: "Diena",
+    theme_night: "Nakts",
   },
   el: {
     garden: "Κήπος",
@@ -1712,6 +1817,11 @@ const STRINGS = {
     zoom_helper: "Αλλάζει τη μίνι κάρτα στο περιεχόμενο της πλήρους κάρτας",
     language: "Γλώσσα",
     lang_auto: "Αυτόματα",
+    illustration: "Κινούμενη εικονογράφηση",
+    illustration_theme: "Θέμα εικονογράφησης",
+    theme_auto: "Αυτόματα (ήλιος ή σκοτεινό θέμα)",
+    theme_day: "Ημέρα",
+    theme_night: "Νύχτα",
   },
 };
 
@@ -1747,11 +1857,11 @@ const svgDoc = (w, h, body, anim = false) => `<svg xmlns="http://www.w3.org/2000
 const svgUri = (svg) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
 
 // Lawn (width w from x, its top at y), its blades swaying in the water or the rain.
-const lawn = (x, y, w, moving) => {
-  let s = `<rect x="${x}" y="${y}" width="${w}" height="12" rx="4" fill="#5aa83d"/>`;
+const lawn = (x, y, w, moving, night = false) => {
+  let s = `<rect x="${x}" y="${y}" width="${w}" height="12" rx="4" fill="${night ? "#3d7f33" : "#5aa83d"}"/>`;
   for (let i = 0; i < w / 9; i++) {
     const bx = x + 4 + i * 9;
-    s += `<path class="${moving ? `wave d${i % 4}` : ""}" d="M${bx} ${y + 2} q1.5 -6 3 -9 q0 5 2 9" fill="#79c257"/>`;
+    s += `<path class="${moving ? `wave d${i % 4}` : ""}" d="M${bx} ${y + 2} q1.5 -6 3 -9 q0 5 2 9" fill="${night ? "#58a043" : "#79c257"}"/>`;
   }
   return s;
 };
@@ -1793,8 +1903,9 @@ const sun = (cx, cy, hot) =>
 const cloud = (x, y, dark) =>
   `<g class="drift"><path d="M${x} ${y} a12 12 0 0 1 12 -12 a16 16 0 0 1 30 -4 a11 11 0 0 1 16 10 a9 9 0 0 1 -2 18 H${x + 6} a9 9 0 0 1 -6 -12 Z" fill="${dark ? "#8a98a8" : "#c3ccd6"}"/></g>`;
 
-// The garden (160 × 120) for an activity: "watering", "rain", "thirsty" or null.
-const gardenSvg = (activity = null) => {
+// The garden (160 × 120) for an activity: "watering", "rain", "thirsty" or null. At night (the illustrated
+// header's night theme) the sun is left out (the header's sky has the moon) and the lawn is darker.
+const gardenSvg = (activity = null, night = false) => {
   let s = "";
   if (activity === "rain") {
     s += cloud(30, 30, true);
@@ -1802,12 +1913,52 @@ const gardenSvg = (activity = null) => {
     s += [26, 44, 62, 80, 98, 116, 134]
       .map((x, i) => `<line class="fall d${i % 5}" x1="${x}" y1="40" x2="${x - 3}" y2="50" stroke="#4aa3ea" stroke-width="2" stroke-linecap="round" opacity="0"/>`)
       .join("");
-  } else s += sun(136, 22, activity === "thirsty");
-  s += lawn(4, 104, 152, activity === "watering" || activity === "rain");
+  } else if (!night) s += sun(136, 22, activity === "thirsty");
+  s += lawn(4, 104, 152, activity === "watering" || activity === "rain", night);
   s += sprinkler(52, 106, activity === "watering");
   s += plantPot(122, 106, activity === "thirsty");
   if (activity === "thirsty") s += `<path d="M104 112 l4 3 l-2 3 M128 113 l3 2" stroke="#3f6b2b" stroke-width="1.2" fill="none" opacity=".7"/>`;
   return svgUri(svgDoc(160, 120, s, !!activity));
+};
+
+// ---------------------------------------------------------------------------
+// The illustrated header: a 90 px banner, the title on the sky at its left, a garden scene at its right (hills, a
+// house and a tree behind the card's own drawn garden above) and a 10 px lawn strip edge to edge at the bottom.
+// Day or night: forced by `illustration_theme`, else the sun below the horizon or Home Assistant's dark theme (dark mode alone without a valid sun.sun).
+// ---------------------------------------------------------------------------
+
+const GC_STARS = [
+  [10, 8],
+  [40, 20],
+  [100, 6],
+  [130, 26],
+  [170, 10],
+  [190, 30],
+  [86, 30],
+];
+
+// The scene's backdrop (200 × 80, drawn to the right edge, the lawn strip under it). No id: nothing to keep apart
+// between cards on one page. The garden itself is the card's own picture (gardenSvg), set over it.
+const gcSceneSvg = (night) => {
+  const c = (day, dark) => (night ? dark : day);
+  const cloud = (x, y, k, i) =>
+    `<g transform="translate(${x} ${y}) scale(${k})"><path class="gc-cloud${i ? " gc-slow" : ""}" d="M-14,4 C-17,4 -18,0 -14.5,-1 C-14,-5 -8,-6 -6,-3 C-4,-8 4,-8 5,-2 C9,-3 12,0 10,4 Z"/></g>`;
+  const sky = night
+    ? `${GC_STARS.map(([x, y], i) => `<circle class="gc-star${i % 3 ? "" : " tw"}" cx="${x}" cy="${y}" r=".7"/>`).join("")}<path class="gc-moon" d="M70 9.4a6.4 6.4 0 1 0 5.6 9.6 5.2 5.2 0 1 1-5.6-9.6Z"/>`
+    : "";
+  return `<svg class="gc-scene" viewBox="0 0 200 80" preserveAspectRatio="xMaxYMax meet" aria-hidden="true" focusable="false">${sky}${cloud(40, 14, 1, 0)}${cloud(150, 22, 0.7, 1)}
+    <path d="M0,80 C30,70 60,64 100,66 C140,68 170,60 200,62 L200,80Z" fill="${c("#a7d39f", "#1d3a4a")}"/>
+    <g transform="translate(20 50)"><rect width="34" height="22" fill="${c("#f3e6d3", "#2a3646")}"/><path d="M-3 1 L17 -12 L37 1Z" fill="${c("#c0603a", "#3a2a2a")}"/><rect class="gc-window" x="5" y="7" width="7" height="6" fill="${c("#86b9de", "#ffcf6e")}"/><rect x="21" y="9" width="6" height="13" fill="${c("#8a5a3a", "#1c2530")}"/></g>
+    <path d="M0,80 C40,74 90,75 200,72 L200,80Z" fill="${c("#86c27f", "#17303d")}"/><circle cx="72" cy="56" r="9" fill="${c("#5aa83d", "#1a3a2a")}"/><rect x="71" y="62" width="2" height="12" fill="#6b4a2a"/></svg>`;
+};
+
+const gcIsNight = (hass, config) => {
+  const theme = config.illustration_theme;
+  if (theme === "night") return true;
+  if (theme === "day") return false;
+  const sunState = hass?.states?.["sun.sun"]?.state;
+  if (sunState && !["unknown", "unavailable"].includes(sunState)) return sunState === "below_horizon" || !!hass?.themes?.darkMode;
+  return !!hass?.themes?.darkMode;
 };
 
 // ---------------------------------------------------------------------------
@@ -2186,6 +2337,17 @@ const RUNS = new Map();
 
 // ---------------------------------------------------------------------------
 // Styles
+// The width of an element's whole text in its own font, in fractional pixels (scrollWidth is rounded).
+let textCtx;
+const textWidth = (el) => {
+  const cs = getComputedStyle(el);
+  textCtx ??= document.createElement("canvas").getContext?.("2d");
+  if (!textCtx) return el.scrollWidth;
+  textCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  const pad = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+  return Math.max(el.scrollWidth, textCtx.measureText(el.textContent.trim()).width + pad);
+};
+
 // ---------------------------------------------------------------------------
 
 const BASE_STYLE = `
@@ -2193,7 +2355,7 @@ const BASE_STYLE = `
           --gc-crit: var(--error-color, #db4437); --gc-idle: var(--disabled-text-color, #9e9e9e); --gc-active: var(--info-color, #039be5);
           /* Text in a state color is mixed with the text color so that it reads at 4.5:1 at least. */
           --gc-accent-text: color-mix(in srgb, var(--gc-accent) 50%, var(--primary-text-color)); }
-  ha-card { overflow: hidden; container-type: inline-size; }
+  ha-card { overflow: hidden; container: gc-card / inline-size; }
   /* Natural width in a parent that sizes to its content (inline-block, grid "auto" column), without a minimum. */
   :host { display: block; min-width: 0; --gc-natural-width: 380px; }
   :host::before { content: ""; display: grid; grid-template-columns: minmax(0, var(--gc-natural-width)); height: 0; }
@@ -2266,11 +2428,70 @@ const BASE_STYLE = `
   .thirst { animation: gc-thirst 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
   @keyframes gc-thirst { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: .55; } }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } .spray .drop { opacity: .8; } }
-  @container (max-width: 230px) {
+  @container gc-card (max-width: 200px) {
     .chip { padding: 4px; flex: none; }
     .chip-text { display: none; }
     .header { gap: 6px; }
   }
+`;
+
+// The illustrated header (see gcSceneSvg): the scene is 200 × 80 (at most 46 % of the card's width), the lawn strip
+// 10 px under it, the icon and the titles on the sky at its left.
+const BANNER_STYLE = `
+  .banner { position: relative; overflow: hidden; height: 90px; color: #10283f; --gc-ground: 10px;
+            background: linear-gradient(90deg, #f1f8ff 0%, #e2f1fd 34%, #b9def8 70%, #9fd0f3 100%); }
+  .banner.night { color: #fff; background: linear-gradient(90deg, #1b2f52 0%, #15284a 36%, #0f1f3d 72%, #0a1830 100%); }
+  .gc-ground { position: absolute; left: 0; right: 0; bottom: 0; height: var(--gc-ground);
+               background: repeating-linear-gradient(90deg, #5aa83d 0 22px, #6cbb4c 22px 44px); }
+  .night .gc-ground { background: repeating-linear-gradient(90deg, #1f4a2a 0 22px, #245433 22px 44px); }
+  /* The scene leaves the title row room for the title and its pill (at least 250 px of the card); with the detail
+     button in the corner, it stands lower and smaller, under the button. */
+  .banner { --gc-stage-w: min(200px, 46%, max(40%, 100% - 250px)); }
+  .banner:has(> .zoom) { --gc-stage-w: min(135px, 40%); }
+  .gc-stage { position: absolute; right: 0; bottom: var(--gc-ground); width: var(--gc-stage-w); aspect-ratio: 5 / 2; }
+  .gc-scene { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .gc-cloud { fill: #fff; opacity: .92; animation: gc-drift 4s ease-in-out infinite alternate; }
+  .gc-cloud.gc-slow { animation-duration: 5.5s; animation-delay: -2s; }
+  .night .gc-cloud { opacity: .1; }
+  .gc-star { fill: #fff; opacity: .8; }
+  .gc-star.tw { animation: gc-twinkle 3.2s ease-in-out infinite alternate; }
+  .gc-moon { fill: #f3eed2; }
+  .night .gc-window { filter: drop-shadow(0 0 1.4px #ffb347); }
+  /* The card's drawn garden (160 × 120), its lawn on the strip at the right of the scene. */
+  .gc-art { position: absolute; left: 47.7%; width: 50.3%; bottom: -3.1%; aspect-ratio: 4 / 3; }
+  .gc-art img { display: block; width: 100%; height: 100%; }
+  .htext { position: absolute; left: 12px; top: 6px; bottom: calc(var(--gc-ground) + 4px); right: calc(var(--gc-stage-w) + 4px);
+           display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .htext .titles { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 1px; container: gc-titles / inline-size; }
+  /* The status pill on the title's row: the title ellipsises first (4 characters kept), the pill keeps its label. */
+  .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .trow .name { flex: 0 1 auto; min-width: 4.6ch; }
+  .htext .name { font-weight: 600; }
+  .banner .sub { color: #3d5670; font-size: 13px; }
+  .banner.night .sub { color: rgba(255,255,255,.8); }
+  /* The icon on a glass disc, in the colour of the garden's status (watering, warning, alert, else idle grey). */
+  .banner .type-icon { background: rgba(255,255,255,.62); box-shadow: inset 0 0 0 1px rgba(47,128,237,.18); }
+  .banner .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 80%, #10283f); }
+  .banner.night .type-icon { background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+  .banner.night .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 70%, #fff); }
+  .banner .chip { flex: none; max-width: none; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+  .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
+  .banner .dot { width: 7px; height: 7px; }
+  .banner .zoom { position: absolute; z-index: 2; top: 5px; right: 5px; margin: 0; color: #33506b; background: rgba(255,255,255,.55);
+                  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
+  .banner.night .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .banner .zoom:hover { background: rgba(255,255,255,.75); }
+  .banner.night .zoom:hover { background: rgba(255,255,255,.22); }
+  /* The whole title and the pill's whole label do not fit on one row (measured, see _fitPill): the pill takes a line
+     of its own under the subtitle, which keeps one line; when that does not fit above the lawn, its dot alone. */
+  .titles.below .trow { display: contents; } .banner .titles.below .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; }
+  .titles.below .sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .banner .titles.dot-only .chip { padding: 4px; } .banner .titles.dot-only .chip-text { display: none; }
+  @keyframes gc-drift { to { transform: translateX(4px); } }
+  @keyframes gc-twinkle { from { opacity: .35; } to { opacity: 1; } }
+  /* Narrow card: no room for the scene beside the title, the sky and the lawn stay. */
+  @container gc-card (max-width: 270px) { .gc-stage { display: none; } .htext { right: 34px; } }
+  @media (prefers-reduced-motion: reduce) { .gc-cloud, .gc-star { animation: none !important; } }
 `;
 
 // Popup (duration to water a zone) at the top of the card, over a backdrop: it stays in view on a long card.
@@ -2316,19 +2537,30 @@ const FULL_STYLE = `
   .zone .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .zone .zname { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .plants { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 8px; }
-  .plant { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border-radius: 12px; min-width: 0;
-           border: 1px solid var(--divider-color, rgba(127,127,127,.25)); }
+  .plant { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 12px; min-width: 0; box-sizing: border-box;
+           container: gc-plant / inline-size; background: var(--secondary-background-color, rgba(127,127,127,.1)); }
   .plant-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  /* The name first: the status chip follows it when there is room, else it goes under it (never the name cut for it). */
+  .plant-titles { flex: 1 1 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
   .plant-pic { width: 32px; height: 32px; border-radius: 50%; flex: none; display: grid; place-items: center; overflow: hidden;
                background: color-mix(in srgb, var(--c, var(--gc-ok)) 16%, transparent); color: color-mix(in srgb, var(--c, var(--gc-ok)) 60%, var(--primary-text-color)); position: relative; }
   .plant-pic img { width: 100%; height: 100%; object-fit: cover; }
   .plant-pic .icon { width: 20px; height: 20px; }
   .plant-pic .badge { position: absolute; right: -1px; bottom: -1px; width: 14px; height: 14px; color: var(--gc-crit); }
-  .plant-name { flex: 1; min-width: 0; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .plant-name { min-width: 6ch; }
-  .plant-head .chip { max-width: 50%; }
-  .gauges { display: flex; flex-direction: column; gap: 4px; }
-  .gauge { display: grid; grid-template-columns: 16px minmax(0, 1fr) minmax(48px, 1.2fr) auto; align-items: center; gap: 6px; font-size: 12px; min-width: 0; }
+  .plant-name { flex: 0 1 auto; min-width: 0; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .plant-titles .chip { flex: 0 1 auto; min-width: 0; max-width: 100%; }
+  .plant-titles .chip-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* The rows of a tile (and of the soil section) share their columns: icon, label, bar, value, so every bar starts and
+     ends at the same place. */
+  .gauges, .soil { display: grid; grid-template-columns: 16px max-content minmax(48px, 1fr) minmax(6em, max-content); gap: 5px 6px; min-width: 0; }
+  .soil { grid-template-columns: 16px minmax(0, max-content) minmax(60px, 1fr) max-content; }
+  .plant .track .mark { box-shadow: 0 0 0 2px var(--secondary-background-color, #ececec); }
+  .gauge { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; font-size: 12px; min-width: 0; }
+  /* A tile too narrow for the labels: the icons alone (the label and the range in the tooltip), the bars wider. */
+  @container gc-plant (max-width: 299px) {
+    .gauges { grid-template-columns: 16px minmax(40px, 1fr) minmax(6em, max-content); }
+    .gauges .lbl { display: none; }
+  }
   .gauge > .icon { width: 16px; height: 16px; color: var(--secondary-text-color); }
   .gauge .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--secondary-text-color); }
   .gauge .v { text-align: right; font-weight: 500; white-space: nowrap; min-width: 4ch; }
@@ -2338,13 +2570,10 @@ const FULL_STYLE = `
   .track .band { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: color-mix(in srgb, var(--gc-ok) 40%, transparent); }
   .track .mark { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--c, var(--gc-ok));
                  box-shadow: 0 0 0 2px var(--card-background-color, #fff); box-sizing: border-box; }
-  .soil { display: flex; flex-direction: column; gap: 4px; }
-  /* Narrow card: the gauge labels give way to the bars (the icon says which reading), the zone button keeps its icon. */
+  /* Narrow card: a smaller picture, the zone button keeps its icon. */
   @container (max-width: 300px) {
     .picture { width: 80px; height: 60px; }
     .hero { gap: 10px; }
-    .gauge { grid-template-columns: 16px minmax(40px, 1fr) auto; }
-    .gauge .lbl { display: none; }
     .zone .btn:not(.round) span { display: none; }
     .zone .btn:not(.round) { width: 34px; height: 34px; padding: 0; border-radius: 50%; flex: none; }
   }
@@ -2527,7 +2756,7 @@ class GardenCard extends HTMLElement {
     const m = this._resolve();
     if (!m) return null;
     const ids = this._entityIds(m);
-    return [h.entities, h.devices, h.language, h.locale, h.themes?.darkMode, this._forecast, Math.floor(Date.now() / 6e4), ...ids.map((id) => h.states[id])];
+    return [h.entities, h.devices, h.language, h.locale, h.themes?.darkMode, h.states["sun.sun"]?.state, this._forecast, Math.floor(Date.now() / 6e4), ...ids.map((id) => h.states[id])];
   }
 
   // The model is rebuilt when the registries or the set of entities change (a new entity, a device renamed).
@@ -2564,7 +2793,39 @@ class GardenCard extends HTMLElement {
       if (this._hass) this.hass = this._hass;
     }, 60000);
     this._fcEntity = undefined;
+    if (!this._fitObserver && typeof ResizeObserver === "function") this._fitObserver = new ResizeObserver(() => this._fitPill());
+    this._fitObserver?.observe(this);
+    document.fonts?.ready?.then(() => this._fitPill());
     this._update();
+  }
+
+  // The banner's status pill, measured after each render and on a new width (in every language): it sits on the
+  // title's row, right after the title, only when the whole title and the pill's whole label fit there; otherwise it
+  // takes a line of its own under the subtitle (.below), the title whole on its row (cut only when it does not fit
+  // alone) and the subtitle on one line. When the three lines do not fit in the banner above the lawn, or the label
+  // not on its line, the pill shows its dot alone (.dot-only): beside the title when the whole title leaves it room, else under the subtitle.
+  _fitPill() {
+    for (const t of this.shadowRoot?.querySelectorAll?.(".htext .titles") || []) {
+      const row = t.querySelector(".trow");
+      const chip = row?.querySelector(".chip");
+      if (!chip?.getBoundingClientRect) continue;
+      t.classList.remove("below", "dot-only");
+      const name = row.querySelector(".name");
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const room = row.getBoundingClientRect().width;
+      const title = name && getComputedStyle(name).display !== "none" ? textWidth(name) + gap : 0;
+      if (title + chip.getBoundingClientRect().width <= room) continue;
+      t.classList.add("below");
+      const banner = t.closest(".banner");
+      const ground = banner.querySelector(".gc-ground");
+      const floor = ground ? ground.getBoundingClientRect().top : banner.getBoundingClientRect().bottom;
+      const box = t.getBoundingClientRect();
+      const tx = chip.querySelector(".chip-text");
+      const whole = !tx || tx.scrollWidth <= tx.clientWidth + 0.5;
+      if (whole && box.bottom <= floor + 0.5 && box.top >= banner.getBoundingClientRect().top - 0.5) continue;
+      t.classList.add("dot-only");
+      if (title + chip.getBoundingClientRect().width <= room) t.classList.remove("below");
+    }
   }
 
   disconnectedCallback() {
@@ -2574,6 +2835,7 @@ class GardenCard extends HTMLElement {
     clearInterval(this._tick);
     clearInterval(this._countdown);
     this._tick = this._countdown = null;
+    this._fitObserver?.disconnect();
     this._outside?.off();
     window.removeEventListener("keydown", this._onKey);
     this._unsubscribeForecast();
@@ -2795,6 +3057,7 @@ class GardenCard extends HTMLElement {
       const kept = this._dialog || this._byPointer ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
+      this._fitPill();
       if (kept) this._restoreFocus(kept);
       if (this._dialog) {
         const sel = focused ? `.modal [data-action="${focused}"]${focused === "dur_preset" ? "" : ""}` : ".modal .primary";
@@ -2999,26 +3262,47 @@ class GardenCard extends HTMLElement {
     return { running, plants, attention, rain, next, status };
   }
 
+  // The header: the illustrated banner (the garden scene, its lawn strip), or the classic header
+  // (`illustration: false`). The icon's colour is the garden's status: watering, alert, warning, else idle grey.
   _header(sum, sub) {
     const c = this._config;
     const st = sum.status;
-    const icon = sum.running.length ? "active" : st?.cls === "crit" ? "crit" : st?.cls === "warn" ? "warn" : "ok";
-    return `
-      <div class="header">
-        <div class="type-icon ${icon}">${svgIcon(sum.running.length ? ICONS.sprinkler : ICONS.flower)}</div>
-        <div class="titles">
-          <div class="name">${esc(c.title || this._t("garden"))}</div>
-          ${sub ? `<div class="sub">${esc(sub)}</div>` : ""}
-        </div>
-        ${
-          st
-            ? `<span class="chip ${st.cls}${st.entity ? " clickable" : ""}"${moreInfo(st.entity)} title="${esc(st.text)}" aria-label="${esc(
-                st.text,
-              )}"><span class="dot"></span><span class="chip-text">${esc(st.text)}</span></span>`
-            : ""
-        }
+    const icon = sum.running.length ? "active" : st?.cls === "crit" ? "crit" : st?.cls === "warn" ? "warn" : "idle";
+    const name = `<div class="name">${esc(c.title || this._t("garden"))}</div>`;
+    // On the banner the status pill follows the title on its row (under the subtitle on a narrow card).
+    const titles = `<div class="titles">
+          ${this._illustrated() ? `<div class="trow">${name}${this._chip(st)}</div>` : name}
+          ${sub ? `<div class="sub" title="${esc(sub)}">${esc(sub)}</div>` : ""}
+        </div>`;
+    const badge = `<div class="type-icon ${icon}">${svgIcon(sum.running.length ? ICONS.sprinkler : ICONS.flower)}</div>`;
+    if (this._illustrated()) {
+      const night = gcIsNight(this._hass, c);
+      return `
+      <div class="banner${night ? " night" : ""}">
+        <div class="gc-ground"></div>
+        ${this._stage(sum, night)}
+        <div class="htext">${badge}${titles}</div>
         ${this._zoomButton()}
       </div>`;
+    }
+    return `
+      <div class="header">
+        ${badge}
+        ${titles}
+        ${this._chip(st)}
+        ${this._zoomButton()}
+      </div>`;
+  }
+
+  _illustrated() {
+    return this._config.illustration !== false;
+  }
+
+  _chip(st) {
+    if (!st) return "";
+    return `<span class="chip ${st.cls}${st.entity ? " clickable" : ""}"${moreInfo(st.entity)} title="${esc(st.text)}" aria-label="${esc(
+      st.text,
+    )}"><span class="dot"></span><span class="chip-text">${esc(st.text)}</span></span>`;
   }
 
   _zoomButton() {
@@ -3050,11 +3334,27 @@ class GardenCard extends HTMLElement {
     return null;
   }
 
-  _picture(sum) {
-    const act = this._activity(sum);
+  // The entity behind the picture: the zone watering, the rain forecast, the thirsty plant.
+  _pictureTarget(sum, act) {
     const thirsty = sum.plants.find((x) => x.s.thirsty)?.p;
-    const target = act === "watering" ? sum.running[0].entity : act === "rain" ? sum.rain.entity : act === "thirsty" ? thirsty.entity || thirsty.sensors.moisture : sum.rain?.entity;
+    return act === "watering" ? sum.running[0].entity : act === "rain" ? sum.rain.entity : act === "thirsty" ? thirsty.entity || thirsty.sensors.moisture : sum.rain?.entity;
+  }
+
+  _picture(sum) {
+    if (this._illustrated()) return "";
+    const act = this._activity(sum);
+    const target = this._pictureTarget(sum, act);
     return `<div class="picture${target ? " clickable" : ""}"${moreInfo(target)} aria-label="${esc(this._config.title || this._t("garden"))}"><img src="${gardenSvg(act)}" alt=""></div>`;
+  }
+
+  // The banner's scene: the backdrop and, over it, the drawn garden of the current activity.
+  _stage(sum, night) {
+    const act = this._activity(sum);
+    const target = this._pictureTarget(sum, act);
+    return `<div class="gc-stage${target ? " clickable" : ""}"${moreInfo(target)} aria-label="${esc(this._config.title || this._t("garden"))}">${gcSceneSvg(night)}<div class="gc-art"><img src="${gardenSvg(
+      act,
+      night,
+    )}" alt=""></div></div>`;
   }
 
   // Info lines next to the picture: the rain suggestion, the next watering, the plants.
@@ -3109,7 +3409,10 @@ class GardenCard extends HTMLElement {
   }
 
   _hero(m, sum) {
-    return `<div class="hero">${this._picture(sum)}<div class="info">${this._big(m, sum)}${this._lines(m, sum)}</div></div>`;
+    const info = this._big(m, sum) + this._lines(m, sum);
+    const pic = this._picture(sum);
+    if (!pic && !info) return "";
+    return `<div class="hero">${pic}<div class="info">${info}</div></div>`;
   }
 
   // The zone's icon: idle sprinkler, or the countdown ring with water spraying.
@@ -3194,8 +3497,7 @@ class GardenCard extends HTMLElement {
     return `<div class="plant">
       <div class="plant-head${target ? " clickable" : ""}"${moreInfo(target)}>
         <div class="plant-pic ${st.cls}">${pic}${badge}</div>
-        <div class="plant-name">${esc(p.name)}</div>
-        <span class="chip ${st.cls}" title="${esc(st.text)}"><span class="dot"></span><span class="chip-text">${esc(st.text)}</span></span>
+        <div class="plant-titles"><div class="plant-name" title="${esc(p.name)}">${esc(p.name)}</div><span class="chip ${st.cls}" title="${esc(st.text)}"><span class="dot"></span><span class="chip-text">${esc(st.text)}</span></span></div>
       </div>
       ${gauges.length ? `<div class="gauges">${gauges.join("")}</div>` : ""}
     </div>`;
@@ -3235,10 +3537,10 @@ class GardenCard extends HTMLElement {
     if (c.show_plants !== false) parts.push(this._plants(m, sum));
     if (c.show_soil !== false) parts.push(this._soil(m));
     const body = parts.filter(Boolean).join("");
-    return `<style>${BASE_STYLE}${FULL_STYLE}</style>
+    return `<style>${BASE_STYLE}${FULL_STYLE}${this._illustrated() ? BANNER_STYLE : ""}</style>
       <ha-card>
         ${this._header(sum, this._subtitle(m, sum))}
-        ${body ? `<div class="content">${body}</div>` : '<div style="height:12px"></div>'}
+        ${body ? `<div class="content">${body}</div>` : this._illustrated() ? "" : '<div style="height:12px"></div>'}
       </ha-card>`;
   }
 }
@@ -3312,14 +3614,20 @@ class GardenMiniCard extends GardenCard {
           tm.end ? `<span class="num" data-end="${tm.end}">${esc(this._t("left", { time: fmtCountdown(tm.end - Date.now()) }))}</span>` : ""
         }</div>`
       : "";
-    return `<style>${BASE_STYLE}${FULL_STYLE}${MINI_STYLE}</style>
+    const info = zoneLine + this._lines(m, sum, true);
+    const pic = this._picture(sum);
+    const content =
+      pic || info || z
+        ? `<div class="content">
+          ${pic}
+          <div class="info">${info}</div>
+          ${z ? `<div class="controls">${this._zoneButton(z, tm, true)}</div>` : ""}
+        </div>`
+        : "";
+    return `<style>${BASE_STYLE}${FULL_STYLE}${MINI_STYLE}${this._illustrated() ? BANNER_STYLE : ""}</style>
       <ha-card>
         ${this._header(sum, "")}
-        <div class="content">
-          ${this._picture(sum)}
-          <div class="info">${zoneLine}${this._lines(m, sum, true)}</div>
-          ${z ? `<div class="controls">${this._zoneButton(z, tm, true)}</div>` : ""}
-        </div>
+        ${content}
       </ha-card>`;
   }
 }
@@ -3422,6 +3730,10 @@ class GardenEditorBase extends HTMLElement {
       },
       { type: "grid", name: "", schema: this.constructor.toggles.map(([name]) => ({ name, selector: { boolean: {} } })) },
       {
+        name: "illustration_theme",
+        selector: { select: { mode: "dropdown", options: ["auto", "day", "night"].map((value) => ({ value, label: tr(`theme_${value}`) })) } },
+      },
+      {
         name: "collapsed",
         selector: { select: { multiple: true, mode: "list", options: ["zones", "plants", "soil"].map((value) => ({ value, label: tr(value) })) } },
       },
@@ -3438,7 +3750,7 @@ class GardenEditorBase extends HTMLElement {
       this._form.computeHelper = (s) => (s.name === "zoom" ? t(this._hass, this._config, "zoom_helper") : undefined);
       this._form.addEventListener("value-changed", (ev) => {
         ev.stopPropagation();
-        const defaults = { ...Object.fromEntries(toggles), rain_threshold: 2, rain_probability: 70, rain_window: 24, collapsed: DEFAULT_COLLAPSED };
+        const defaults = { ...Object.fromEntries(toggles), rain_threshold: 2, rain_probability: 70, rain_window: 24, illustration_theme: "auto", collapsed: DEFAULT_COLLAPSED };
         const config = fromForm(ev.detail.value, this._config);
         for (const [k, v] of Object.entries(config)) {
           // Keep the YAML minimal: no empty values, no options left at their default.
@@ -3449,7 +3761,7 @@ class GardenEditorBase extends HTMLElement {
       });
       this.appendChild(this._form);
     }
-    const data = { rain_threshold: 2, rain_probability: 70, rain_window: 24, ...toForm(this._config) };
+    const data = { rain_threshold: 2, rain_probability: 70, rain_window: 24, illustration_theme: "auto", ...toForm(this._config) };
     for (const [name, def] of toggles) if (data[name] === undefined) data[name] = def;
     this._form.hass = this._hass;
     if (this._formConfig !== this._config) {
@@ -3467,6 +3779,7 @@ class GardenEditorBase extends HTMLElement {
 class GardenCardEditor extends GardenEditorBase {
   static get toggles() {
     return [
+      ["illustration", true],
       ["show_title", true],
       ["show_subtitle", true],
       ["show_weather", true],
