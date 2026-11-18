@@ -37,8 +37,8 @@ Zones, plants, soil sensors and the weather entity are **discovered automaticall
 - Drawn garden (lawn, pop-up sprinkler, potted plant, sky) animated by what goes on: the sprinkler sprays while a zone waters, a cloud rains when watering is not needed, the plant wilts under a burning sun when one of your plants is thirsty (see [Animations](#animations))
 - **Illustrated header** (90 px, full and mini card): the title on the sky at the left, the drawn garden at the right in front of hills, a house and a tree, on a lawn strip edge to edge; night picture (moon, stars, lit window) with a dark theme (a light theme keeps the day picture after sunset), or forced with `illustration_theme`; `illustration: false` brings back the classic header
 - Header icon in a round badge, in the color of the garden's state (blue watering, red a plant needs water, orange a plant needs attention, grey at rest), and a status chip under the title
-- **Watering zones**: state, next run, soil moisture of the zone, and while it waters a ring that counts down second by second with water spraying from the zone's icon; **Start** opens a popup at the top of the card to pick the duration (presets 5 to 60 min, or minute by minute), **Stop** ends the run
-- Each integration is started its own way (Rain Bird, Rachio and B-hyve services in minutes, Gardena smart system and OpenSprinkler in seconds, Hydrawise on its watering sensor, the watering duration number of LinkTap and Gardena Bluetooth), or with a script of your own (see [Starting a zone](#starting-a-zone))
+- **Watering zones**: state, next run, soil moisture of the zone, and while it waters a ring that counts down second by second with water spraying from the zone's icon; **Start** opens a popup at the top of the card to pick the duration (presets 5 to 60 min, or minute by minute) whenever the zone can be given one (see [Starting a zone](#starting-a-zone)), **Stop** ends the run
+- Each integration is started its own way (Rain Bird, Rachio and B-hyve services in minutes, Gardena smart system and OpenSprinkler in seconds, Hydrawise on its watering sensor, the watering duration number of LinkTap and Gardena Bluetooth, the timed run of a SONOFF SWV valve on Zigbee2MQTT), or with a script of your own (see [Starting a zone](#starting-a-zone))
 - **Next watering**: the earliest next run of the zones (Hydrawise next cycle, any timestamp sensor) or of the entity you pick (a timestamp sensor, an `input_datetime` or a calendar)
 - **Rain suggestion**: "No watering needed" when the rain expected over the next 24 h reaches 2 mm, when rain is likely (70 % and more) or when it rains now, else the rain expected (or "no rain expected"); the thresholds and the window are options
 - **Plants**: moisture, fertility (conductivity), light, temperature and battery as gauges, the green band showing the plant's thresholds; a plant that needs water turns red with a pulsing drop
@@ -63,6 +63,7 @@ Zones, plants, soil sensors and the weather entity are **discovered automaticall
 | <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/linktap.png" alt="" width="16"> [LinkTap](https://github.com/sh00t2kill/linktap_local_http_component) (custom, `linktap`) | LinkTap taps | Valve, started with `linktap.start_watering`; its watering duration number as the default, remaining and total duration |
 | <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/rachio.png" alt="" width="16"> [Rachio](https://www.home-assistant.io/integrations/rachio/) (core) | Rachio controllers | Zone switches (not standby, rain delay or schedules), started with `rachio.start_watering` |
 | <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/bhyve.png" alt="" width="16"> [Orbit B-hyve](https://github.com/sebr/bhyve-home-assistant) (custom, `bhyve`) | B-hyve timers and controllers | Zone valves (4.x; zone switches of 3.x), started with `bhyve.start_watering` |
+| [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/SWV.html) (`mqtt`) | SONOFF SWV Zigbee water valve | Its switch, listed in `zones`, started with a timed run of the valve (`cyclic_timed_irrigation` published with `mqtt.publish`): it closes itself at the end |
 | Any other valve or switch | ESPHome sprinkler, Zigbee water valves, smart plugs on a pump… | Listed in `zones`: opened and closed; a duration with a duration number of its device or your own script |
 | [Plant](https://www.home-assistant.io/integrations/plant/) (core) and [Plant Monitor](https://github.com/Olen/homeassistant-plant) (custom) | Plants | Readings, the integration's problem verdict, and the Plant Monitor threshold numbers |
 | <img src="https://raw.githubusercontent.com/juju35/ha-garden-card/main/images/xiaomi.png" alt="" width="16"> [Xiaomi BLE](https://www.home-assistant.io/integrations/xiaomi_ble/) and other plant sensors | Mi Flora, Flower Care, Zigbee plant sensors | Devices with soil moisture plus fertility or light become plants |
@@ -220,6 +221,7 @@ language: en
 | `total` | Sensor of the length of the current run (for the ring) |
 | `next_run` | Timestamp sensor of the zone's next run |
 | `duration_entity` | Number entity set to the duration before opening the zone (unit read from the entity) |
+| `z2m_topic` | SONOFF SWV on Zigbee2MQTT: the valve's topic (default `zigbee2mqtt/<device name>`; set it with another base topic) |
 | `open_for` | Gardena Bluetooth: the *Open for* number (minutes) that opens the valve for the duration |
 | `watering` | Binary sensor telling the zone waters (Hydrawise: the target of `hydrawise.start_watering`) |
 | `running` | Binary sensor used as the zone's state instead of the entity's own (OpenSprinkler: `…_station_running`) |
@@ -255,8 +257,9 @@ The Start button opens a popup at the top of the card with the duration (presets
 | LinkTap | `linktap.start_watering` with `seconds` (up to 1439 minutes) |
 | Orbit B-hyve | `bhyve.start_watering` with `minutes` |
 | Gardena Bluetooth | `number.set_value` on its *Open for* number, in minutes |
+| SONOFF SWV on Zigbee2MQTT (no duration number on its device) | `mqtt.publish` on `<z2m_topic>/set` of `{"cyclic_timed_irrigation": {"current_count": 0, "total_number": 1, "irrigation_duration": <seconds>, "irrigation_interval": 0}}` (up to 24 h) |
 | With a duration number (`duration_entity`, Gardena Bluetooth without *Open for*) | `number.set_value` (in the number's unit), then `valve.open_valve` / `switch.turn_on` |
-| Other valve or switch | `valve.open_valve` / `switch.turn_on`, without popup: it runs until stopped (or until its own timer ends) |
+| Other valve or switch | `valve.open_valve` / `switch.turn_on`, without popup: it runs until stopped (or until its own timer ends). Give it a duration with `duration_entity` or `script` to get the popup |
 
 Stop closes the valve (`valve.close_valve`), turns the switch off, or calls `opensprinkler.stop`. The buttons are disabled while the zone is unavailable.
 

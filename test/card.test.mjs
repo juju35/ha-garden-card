@@ -199,6 +199,33 @@ test("each integration is started its own way", async () => {
   assert.equal(card._defaultMinutes(zone("valve.potager")), 15);
 });
 
+test("a SONOFF SWV on Zigbee2MQTT gets the duration popup and a timed run of its own", async () => {
+  const swv = { id: "swv", name: "Garden tap", name_by_user: "Tap", manufacturer: "SONOFF", model: "Zigbee smart water valve", model_id: "SWV", identifiers: [["mqtt", "zigbee2mqtt_0x1"]] };
+  const entry = { entity_id: "switch.garden_tap", device_id: "swv", platform: "mqtt" };
+  const hass = makeHass({ extraStates: { "switch.garden_tap": { entity_id: "switch.garden_tap", state: "off", attributes: { friendly_name: "Garden tap" } } } });
+  hass.devices = { ...hass.devices, swv };
+  hass.entities = { ...hass.entities, "switch.garden_tap": entry };
+  const [z] = gc.resolve(hass, { zones: ["switch.garden_tap"] }).zones;
+  assert.equal(z.z2mTopic, "zigbee2mqtt/Garden tap");
+  const card = new gc.GardenCard();
+  card.setConfig({});
+  card._hass = hass;
+  assert.ok(card._supportsDuration(z));
+  assert.equal(card._maxMinutes(z), 1440);
+  const payload = { cyclic_timed_irrigation: { current_count: 0, total_number: 1, irrigation_duration: 1200, irrigation_interval: 0 } };
+  same(card._startCalls(z, 20), [["mqtt", "publish", { topic: "zigbee2mqtt/Garden tap/set", payload: JSON.stringify(payload) }]]);
+  // Stop turns the switch off; a custom base topic, and a script still comes first.
+  same(card._stopCalls(z), [["switch", "turn_off", { entity_id: "switch.garden_tap" }]]);
+  const [own] = gc.resolve(hass, { zones: [{ entity: "switch.garden_tap", z2m_topic: "z2m/Tap/set" }] }).zones;
+  assert.equal(own.z2mTopic, "z2m/Tap");
+  same(card._startCalls({ ...z, script: "script.w" }, 5)[0][0], "script");
+  // An other MQTT switch is opened as before, without popup.
+  hass.devices.swv = { ...swv, manufacturer: "IKEA", model_id: "E1" };
+  const [plain] = gc.resolve(hass, { zones: ["switch.garden_tap"] }).zones;
+  assert.equal(plain.z2mTopic, undefined);
+  assert.ok(!card._supportsDuration(plain));
+});
+
 test("Stop closes a valve, and an unavailable zone gets disabled buttons and no call", async () => {
   const { card, hass, html } = await mount({}, { overrides: { "valve.gazon": { state: "unavailable" } } });
   click(card, { action: "stop", entity: "valve.potager" });

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 - 2026-11-18
+
+### Features
+- **SONOFF SWV water valves on Zigbee2MQTT** (#13): Start now opens the duration popup for them too, and starts a timed run of the valve itself (`cyclic_timed_irrigation` through `mqtt.publish`, up to 24 h), so it closes on its own at the end even if Home Assistant goes down. The valve is recognised from its device (SONOFF, model SWV); `z2m_topic` sets its topic with another base topic than `zigbee2mqtt`.
+
+### Fixes
+- **README**: the duration popup is offered when the card can give the zone a duration (its integration, a duration number, a script or the SWV timed run); a plain valve or switch is still opened without it.
+
 ## 1.1.1 - 2026-11-18
 
 ### Fixes
