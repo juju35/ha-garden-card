@@ -2128,6 +2128,11 @@ const deviceClass = (hass, id) => hass.states[id]?.attributes?.device_class;
 // The entity of a device whose domain and text (entity id + translation key) match.
 const pick = (hass, list, domain, re, test = () => true) => list.find((e) => domainOf(e.entity_id) === domain && re.test(keyText(e, hass)) && test(e))?.entity_id;
 
+// A SONOFF Zigbee water valve (SWV, SWV-Z…) as Zigbee2MQTT describes it in the device registry.
+const isSonoffSwv = (d) => !!d && /sonoff/i.test(d.manufacturer || "") && /\bSWV\b|\(SWV|^SWV/i.test(`${d.model_id || ""} ${d.model || ""}`);
+// Zigbee2MQTT's timed run of a SONOFF SWV: once, for `min` minutes (the valve takes up to 24 h).
+const swvPayload = (min) => JSON.stringify({ cyclic_timed_irrigation: { current_count: 0, total_number: 1, irrigation_duration: mins(min, 1440) * 60, irrigation_interval: 0 } });
+
 // A zone: { entity, name, platform, device, remaining, total, next, durationEntity, watering, running, moisture, … }.
 const buildZone = (hass, item, entry, siblings, single) => {
   const cfg = typeof item === "string" ? { entity: item } : { ...item };
@@ -2149,6 +2154,12 @@ const buildZone = (hass, item, entry, siblings, single) => {
     watering: cfg.watering ?? pick(hass, list, "binary_sensor", /watering/),
     moisture: cfg.moisture ?? pick(hass, list, "sensor", /./, (e) => deviceClass(hass, e.entity_id) === "moisture"),
   };
+  // SONOFF SWV water valves on Zigbee2MQTT: no duration entity, but the valve takes a timed run of its own
+  // (cyclic_timed_irrigation, published on its set topic) and closes itself, whatever becomes of Home Assistant.
+  const dev = entry?.device_id ? hass.devices?.[entry.device_id] : null;
+  if (cfg.z2m_topic || (platform === "mqtt" && !zone.durationEntity && isSonoffSwv(dev))) {
+    zone.z2mTopic = String(cfg.z2m_topic || `zigbee2mqtt/${dev.name}`).replace(/\/set$/, "");
+  }
   if (platform === "gardena_bluetooth") zone.openFor = cfg.open_for ?? pick(hass, list, "number", /remaining_open_set/);
   if (platform === "opensprinkler" && /_station_enabled$/.test(id)) {
     zone.running = cfg.running ?? id.replace(/^switch\./, "binary_sensor.").replace(/_station_enabled$/, "_station_running");
@@ -2972,12 +2983,12 @@ class GardenCard extends HTMLElement {
   }
 
   _supportsDuration(z) {
-    return !!(z.script || PLATFORMS[z.platform]?.start?.(z, 1) || z.durationEntity);
+    return !!(z.script || z.z2mTopic || PLATFORMS[z.platform]?.start?.(z, 1) || z.durationEntity);
   }
 
   // The longest run the zone takes, in minutes: its integration's limit, else its duration number's maximum.
   _maxMinutes(z) {
-    if (z.script) return 1440;
+    if (z.script || z.z2mTopic) return 1440;
     const own = PLATFORMS[z.platform];
     if (own?.max && own.start?.(z, 1)) return own.max;
     const n = this._s(z.durationEntity);
@@ -2998,6 +3009,7 @@ class GardenCard extends HTMLElement {
   // Service calls that start `z` for `min` minutes.
   _startCalls(z, min) {
     if (z.script) return [["script", "turn_on", { entity_id: z.script, variables: { zone: z.entity, minutes: min } }]];
+    if (z.z2mTopic) return [["mqtt", "publish", { topic: `${z.z2mTopic}/set`, payload: swvPayload(min) }]];
     const own = PLATFORMS[z.platform]?.start?.(z, min);
     if (own) return own;
     const calls = [];
