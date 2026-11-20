@@ -43,6 +43,19 @@ const mount = async (config = {}, opts = {}, Card = gc.GardenCard) => {
 
 const click = (card, dataset, path) => card._onClick({ composedPath: () => path ?? [{ dataset }], stopPropagation() {}, detail: 1 });
 
+test("a plant's reading that changes is shown, the model kept (same registries)", async () => {
+  const { card, hass, html } = await mount();
+  assert.match(html(), /Tomatoes: Needs water/);
+  const model = card._model;
+  const st = { ...hass.states, "sensor.tomates_humidite": { ...hass.states["sensor.tomates_humidite"], state: "35" } };
+  card.hass = { ...hass, states: st };
+  assert.equal(card._model, model, "the model is not rebuilt for a state change");
+  assert.doesNotMatch(html(), /Tomatoes: Needs water/);
+  // A threshold number of a Plant Monitor plant is watched too.
+  const ids = card._entityIds(card._model);
+  assert.ok(ids.some((id) => id.startsWith("number.")), "the threshold numbers are dependencies");
+});
+
 test("zones, plants, soil sensors and the weather are discovered from the registries", () => {
   const m = gc.resolve(makeHass(), {});
   same(

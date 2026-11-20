@@ -2273,6 +2273,10 @@ const buildPlant = (hass, item) => {
     }
   }
   return {
+    // What the plant was built from: its readings are read again from it on every state change (see refreshPlants).
+    item,
+    // The number entities its thresholds come from (Plant Monitor), watched like its sensors.
+    limits: Object.values(numbers).flat().filter(Boolean),
     id: cfg.entity || dev?.id || cfg.name,
     name: cfg.name || (st && (a.friendly_name || cfg.entity)) || devName(dev) || "?",
     entity: cfg.entity || null,
@@ -2329,6 +2333,15 @@ const resolveWeather = (hass, config) => {
   return Object.keys(hass.states)
     .filter((id) => domainOf(id) === "weather")
     .sort()[0];
+};
+
+// The readings of the plants (values, thresholds from number entities, the plant integration's verdict) come from
+// states: the model is kept across state changes, so they are read again once per new set of states.
+const refreshPlants = (hass, m) => {
+  if (!m || m.states === hass.states) return m;
+  m.states = hass.states;
+  m.plants = m.plants.map((p) => buildPlant(hass, p.item));
+  return m;
 };
 
 // Everything the card shows, memoized per registries / config object.
@@ -2762,25 +2775,27 @@ class GardenCard extends HTMLElement {
   _deps() {
     const h = this._hass;
     if (!h || !this._config) return null;
-    const m = this._resolve();
+    const m = this._resolve(false);
     if (!m) return null;
     const ids = this._entityIds(m);
     return [h.entities, h.devices, h.language, h.locale, h.themes?.darkMode, this._forecast, Math.floor(Date.now() / 6e4), ...ids.map((id) => h.states[id])];
   }
 
   // The model is rebuilt when the registries or the set of entities change (a new entity, a device renamed).
-  _resolve() {
+  // `fresh: false` (the dependency check, on every state change of the instance) skips reading the plants again.
+  _resolve(fresh = true) {
     const h = this._hass;
     const key = [h.entities, h.devices, Object.keys(h.states).length];
-    if (this._model && this._modelKey?.every((k, i) => k === key[i])) return this._model;
+    if (this._model && this._modelKey?.every((k, i) => k === key[i])) return fresh ? refreshPlants(h, this._model) : this._model;
     this._modelKey = key;
     this._model = resolve(h, this._config);
+    if (this._model) this._model.states = h.states;
     return this._model;
   }
 
   _entityIds(m) {
     const z = m.zones.flatMap((z) => [z.entity, z.remaining, z.total, z.next, z.durationEntity, z.watering, z.running, z.moisture]);
-    const p = m.plants.flatMap((p) => [p.entity, ...Object.values(p.sensors)]);
+    const p = m.plants.flatMap((p) => [p.entity, ...Object.values(p.sensors), ...(p.limits || [])]);
     return [...z, ...p, ...m.soil.map((s) => s.entity), m.weather, this._config.rain_sensor, this._config.next_run].filter(Boolean);
   }
 
