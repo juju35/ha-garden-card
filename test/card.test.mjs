@@ -404,6 +404,10 @@ test("visual editor: zone and plant lists edited as entities and devices, YAML o
   const back = gc.fromForm({ ...form, zone_entities: ["switch.haie"] }, config);
   same(JSON.parse(JSON.stringify(back.zones)), [{ entity: "switch.haie", duration: 25 }]);
   same(JSON.parse(JSON.stringify(back.plants)), ["plant.basilic", { device: "flora", min_moisture: 10 }]);
+  // A plant made of sensors (YAML only: no entity, no device) survives an edit in the form.
+  const fern = { name: "Fern", moisture: "sensor.sol_gazon" };
+  const withFern = { ...config, plants: [...config.plants, fern] };
+  same(JSON.parse(JSON.stringify(gc.fromForm(gc.toForm(withFern), withFern).plants)), ["plant.basilic", { device: "flora", min_moisture: 10 }, fern]);
   assert.equal(typeof gc.GardenCard.getConfigElement, "function");
   same(gc.GardenCard.getStubConfig(), {});
   assert.ok(gc.window.customCards.some((c) => c.type === "garden-mini-card"));

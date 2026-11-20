@@ -3705,7 +3705,13 @@ const fromForm = (value, previous) => {
   const config = { ...value };
   const keep = (list, id, key) => asList(list).find((x) => x && typeof x === "object" && x[key] === id) || id;
   const zones = asList(value.zone_entities).map((id) => keep(previous.zones, id, "entity"));
-  const plants = [...asList(value.plant_entities).map((id) => keep(previous.plants, id, "entity")), ...asList(value.plant_devices).map((d) => keep(previous.plants, d, "device"))];
+  // Plants made of sensors in YAML (no `entity`, no `device`) have no field in the form: kept as they are.
+  const bySensors = asList(previous.plants).filter((p) => p && typeof p === "object" && !p.entity && !p.device);
+  const plants = [
+    ...asList(value.plant_entities).map((id) => keep(previous.plants, id, "entity")),
+    ...asList(value.plant_devices).map((d) => keep(previous.plants, d, "device")),
+    ...bySensors,
+  ];
   const soil = asList(value.moisture_sensors).map((id) => keep(previous.moisture_sensors, id, "entity"));
   delete config.zone_entities;
   delete config.plant_entities;
