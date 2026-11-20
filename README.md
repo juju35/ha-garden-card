@@ -193,6 +193,7 @@ language: en
 | `show_subtitle` | both | `true` | Show the subtitle (next watering, or the number of zones and plants) |
 | `zones` | both | Automatic | Watering zones: entity ids of valves or switches, or objects (see [Zone options](#zone-options)); empty or absent, the zones of the [supported integrations](#supported-integrations) |
 | `plants` | both | Automatic | Plants: `plant.*` entity ids, devices (`device:` its name or id) or plants made of sensors (see [Plant options](#plant-options)); absent, every plant entity and every plant sensor device |
+| `plants_auto` | both | `true` | **YAML only.** With `plants: []`, `false` shows no plant at all; otherwise an empty list means the plants found automatically |
 | `moisture_sensors` | both | Automatic | Soil moisture sensors: entity ids, or objects with `entity`, `name`, `min` and `max` (default 20–60 %); absent, the moisture sensors of no plant and no zone |
 | `weather` | both | First weather entity | Weather entity whose forecast gives the rain expected; `none` for no rain suggestion |
 | `rain_sensor` | both | — | Sensor giving the rain expected over the window (in its unit, mm by default), used instead of the forecast amount (e.g. a Météo-France or OpenWeatherMap rain sensor) |

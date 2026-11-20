@@ -2112,9 +2112,18 @@ const byDevice = (hass) => {
 
 const devName = (d) => d?.name_by_user || d?.name || "";
 const nameOf = (hass, id, fallback) => fallback || hass.states[id]?.attributes?.friendly_name || id;
+// Devices by display or registry name (the first device that has it, as a scan would find), built once per device registry object.
+const devByName = new WeakMap();
 const findDev = (hass, ref) => {
   if (!ref || !hass.devices) return null;
-  return hass.devices[ref] || Object.values(hass.devices).find((d) => devName(d) === ref || d.name === ref) || null;
+  if (hass.devices[ref]) return hass.devices[ref];
+  let names = devByName.get(hass.devices);
+  if (!names) {
+    names = new Map();
+    for (const d of Object.values(hass.devices)) for (const n of [devName(d), d.name]) if (n && !names.has(n)) names.set(n, d);
+    devByName.set(hass.devices, names);
+  }
+  return names.get(ref) || null;
 };
 // What an entity is called, to recognise it: its id, translation key and names (registry and state), as snake_case.
 const keyText = (e, hass) =>
@@ -2273,6 +2282,10 @@ const buildPlant = (hass, item) => {
     }
   }
   return {
+    // What the plant was built from: its readings are read again from it on every state change (see refreshPlants).
+    item,
+    // The number entities its thresholds come from (Plant Monitor), watched like its sensors.
+    limits: Object.values(numbers).flat().filter(Boolean),
     id: cfg.entity || dev?.id || cfg.name,
     name: cfg.name || (st && (a.friendly_name || cfg.entity)) || devName(dev) || "?",
     entity: cfg.entity || null,
@@ -2331,6 +2344,15 @@ const resolveWeather = (hass, config) => {
     .sort()[0];
 };
 
+// The readings of the plants (values, thresholds from number entities, the plant integration's verdict) come from
+// states: the model is kept across state changes, so they are read again once per new set of states.
+const refreshPlants = (hass, m) => {
+  if (!m || m.states === hass.states) return m;
+  m.states = hass.states;
+  m.plants = m.plants.map((p) => buildPlant(hass, p.item));
+  return m;
+};
+
 // Everything the card shows, memoized per registries / config object.
 const resolve = (hass, config) => {
   if (!hass.entities || !hass.devices) return null;
@@ -2345,7 +2367,40 @@ const resolve = (hass, config) => {
 const RUNS = new Map();
 
 // ---------------------------------------------------------------------------
-// Styles
+// DOM patching
+// ---------------------------------------------------------------------------
+
+// Patches `root` to the markup `html` in place: nodes of the same type and tag are kept (their attributes and text
+// updated), so that animations and transitions run on instead of restarting, images are not reloaded, the focus
+// stays where it is and the card keeps its height. Where there is no DOM to parse with (unit tests), the markup is
+// set as is.
+const morph = (root, html) => {
+  const tpl = typeof document !== "undefined" && document.createElement?.("template");
+  if (!tpl || !("content" in tpl) || !root.childNodes) {
+    root.innerHTML = html;
+    return;
+  }
+  tpl.innerHTML = html;
+  patchChildren(root, tpl.content);
+};
+const patchChildren = (to, from) => {
+  const old = [...to.childNodes];
+  const fresh = [...from.childNodes];
+  fresh.forEach((n, i) => {
+    const o = old[i];
+    if (!o) to.appendChild(n);
+    else if (o.nodeType !== n.nodeType || o.nodeName !== n.nodeName) to.replaceChild(n, o);
+    else if (o.nodeType !== 1) {
+      if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue;
+    } else {
+      for (const a of [...o.attributes]) if (!n.hasAttribute(a.name)) o.removeAttribute(a.name);
+      for (const a of [...n.attributes]) if (o.getAttribute(a.name) !== a.value) o.setAttribute(a.name, a.value);
+      patchChildren(o, n);
+    }
+  });
+  for (let i = old.length - 1; i >= fresh.length; i--) to.removeChild(old[i]);
+};
+
 // The width of an element's whole text in its own font, in fractional pixels (scrollWidth is rounded).
 let textCtx;
 const textWidth = (el) => {
@@ -2357,6 +2412,8 @@ const textWidth = (el) => {
   return Math.max(el.scrollWidth, textCtx.measureText(el.textContent.trim()).width + pad);
 };
 
+// ---------------------------------------------------------------------------
+// Styles
 // ---------------------------------------------------------------------------
 
 const BASE_STYLE = `
@@ -2472,7 +2529,7 @@ const BANNER_STYLE = `
   .htext { position: absolute; left: 12px; top: 6px; bottom: calc(var(--gc-ground) + 4px); right: calc(var(--gc-stage-w) + 4px);
            display: flex; align-items: center; gap: 10px; min-width: 0; }
   .htext .titles { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 1px; container: gc-titles / inline-size; }
-  /* The status pill on the title's row: the title ellipsises first (4 characters kept), the pill keeps its label. */
+  /* The status pill at the right end of the title's row: the title ellipsises first (4 characters kept), the pill keeps its label. */
   .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
   .trow .name { flex: 0 1 auto; min-width: 4.6ch; }
   .htext .name { font-weight: 600; }
@@ -2483,7 +2540,7 @@ const BANNER_STYLE = `
   .banner .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 80%, #10283f); }
   .banner.night .type-icon { background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
   .banner.night .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 70%, #fff); }
-  .banner .chip { flex: none; max-width: none; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+  .banner .chip { flex: none; max-width: none; margin-left: auto; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
   .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
   .banner .dot { width: 7px; height: 7px; }
   .banner .zoom { position: absolute; z-index: 2; top: 5px; right: 5px; margin: 0; color: #33506b; background: rgba(255,255,255,.55);
@@ -2493,7 +2550,7 @@ const BANNER_STYLE = `
   .banner.night .zoom:hover { background: rgba(255,255,255,.22); }
   /* The whole title and the pill's whole label do not fit on one row (measured, see _fitPill): the pill takes a line
      of its own under the subtitle, which keeps one line; when that does not fit above the lawn, its dot alone. */
-  .titles.below .trow { display: contents; } .banner .titles.below .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; }
+  .titles.below .trow { display: contents; } .banner .titles.below .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; margin-left: 0; }
   .titles.below .sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .banner .titles.dot-only .chip { padding: 4px; } .banner .titles.dot-only .chip-text { display: none; }
   @keyframes gc-drift { to { transform: translateX(4px); } }
@@ -2762,25 +2819,27 @@ class GardenCard extends HTMLElement {
   _deps() {
     const h = this._hass;
     if (!h || !this._config) return null;
-    const m = this._resolve();
+    const m = this._resolve(false);
     if (!m) return null;
     const ids = this._entityIds(m);
     return [h.entities, h.devices, h.language, h.locale, h.themes?.darkMode, this._forecast, Math.floor(Date.now() / 6e4), ...ids.map((id) => h.states[id])];
   }
 
   // The model is rebuilt when the registries or the set of entities change (a new entity, a device renamed).
-  _resolve() {
+  // `fresh: false` (the dependency check, on every state change of the instance) skips reading the plants again.
+  _resolve(fresh = true) {
     const h = this._hass;
     const key = [h.entities, h.devices, Object.keys(h.states).length];
-    if (this._model && this._modelKey?.every((k, i) => k === key[i])) return this._model;
+    if (this._model && this._modelKey?.every((k, i) => k === key[i])) return fresh ? refreshPlants(h, this._model) : this._model;
     this._modelKey = key;
     this._model = resolve(h, this._config);
+    if (this._model) this._model.states = h.states;
     return this._model;
   }
 
   _entityIds(m) {
     const z = m.zones.flatMap((z) => [z.entity, z.remaining, z.total, z.next, z.durationEntity, z.watering, z.running, z.moisture]);
-    const p = m.plants.flatMap((p) => [p.entity, ...Object.values(p.sensors)]);
+    const p = m.plants.flatMap((p) => [p.entity, ...Object.values(p.sensors), ...(p.limits || [])]);
     return [...z, ...p, ...m.soil.map((s) => s.entity), m.weather, this._config.rain_sensor, this._config.next_run].filter(Boolean);
   }
 
@@ -2808,12 +2867,22 @@ class GardenCard extends HTMLElement {
     this._update();
   }
 
-  // The banner's status pill, measured after each render and on a new width (in every language): it sits on the
-  // title's row, right after the title, only when the whole title and the pill's whole label fit there; otherwise it
+  // The banner's status pill, measured after each render and on a new width (in every language): it sits at the
+  // right end of the title's row only when the whole title and the pill's whole label fit there; otherwise it
   // takes a line of its own under the subtitle (.below), the title whole on its row (cut only when it does not fit
   // alone) and the subtitle on one line. When the three lines do not fit in the banner above the lawn, or the label
   // not on its line, the pill shows its dot alone (.dot-only): beside the title when the whole title leaves it room, else under the subtitle.
   _fitPill() {
+    // Home Assistant's <ha-card> (a Lit element) shows its content only from its first update, a microtask after it
+    // is connected: measured before, everything is 0 px wide and the pill lands on the wrong line. Fitted then.
+    const haCard = this.shadowRoot?.querySelector?.("ha-card");
+    if (haCard && haCard.hasUpdated === false) {
+      this._pillWait ??= (haCard.updateComplete?.then ? haCard.updateComplete : new Promise((r) => requestAnimationFrame(r))).then(() => {
+        this._pillWait = null;
+        this._fitPill();
+      });
+      return;
+    }
     for (const t of this.shadowRoot?.querySelectorAll?.(".htext .titles") || []) {
       const row = t.querySelector(".trow");
       const chip = row?.querySelector(".chip");
@@ -3065,10 +3134,12 @@ class GardenCard extends HTMLElement {
     if (html !== this._html) {
       const focused = this._dialog && this.shadowRoot.activeElement?.dataset?.action;
       const kept = this._dialog || this._byPointer ? null : this._focusedSpot();
+      const was = this.shadowRoot.activeElement;
       this._html = html;
-      this.shadowRoot.innerHTML = html;
+      morph(this.shadowRoot, html);
       this._fitPill();
-      if (kept) this._restoreFocus(kept);
+      // The focused node is kept by the patch; put the focus back only when that node was replaced.
+      if (kept && (!was || !was.isConnected || this.shadowRoot.activeElement !== was)) this._restoreFocus(kept);
       if (this._dialog) {
         const sel = focused ? `.modal [data-action="${focused}"]${focused === "dur_preset" ? "" : ""}` : ".modal .primary";
         this.shadowRoot.querySelector(sel)?.focus?.({ preventScroll: true });
@@ -3690,7 +3761,13 @@ const fromForm = (value, previous) => {
   const config = { ...value };
   const keep = (list, id, key) => asList(list).find((x) => x && typeof x === "object" && x[key] === id) || id;
   const zones = asList(value.zone_entities).map((id) => keep(previous.zones, id, "entity"));
-  const plants = [...asList(value.plant_entities).map((id) => keep(previous.plants, id, "entity")), ...asList(value.plant_devices).map((d) => keep(previous.plants, d, "device"))];
+  // Plants made of sensors in YAML (no `entity`, no `device`) have no field in the form: kept as they are.
+  const bySensors = asList(previous.plants).filter((p) => p && typeof p === "object" && !p.entity && !p.device);
+  const plants = [
+    ...asList(value.plant_entities).map((id) => keep(previous.plants, id, "entity")),
+    ...asList(value.plant_devices).map((d) => keep(previous.plants, d, "device")),
+    ...bySensors,
+  ];
   const soil = asList(value.moisture_sensors).map((id) => keep(previous.moisture_sensors, id, "entity"));
   delete config.zone_entities;
   delete config.plant_entities;

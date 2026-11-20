@@ -43,6 +43,19 @@ const mount = async (config = {}, opts = {}, Card = gc.GardenCard) => {
 
 const click = (card, dataset, path) => card._onClick({ composedPath: () => path ?? [{ dataset }], stopPropagation() {}, detail: 1 });
 
+test("a plant's reading that changes is shown, the model kept (same registries)", async () => {
+  const { card, hass, html } = await mount();
+  assert.match(html(), /Tomatoes: Needs water/);
+  const model = card._model;
+  const st = { ...hass.states, "sensor.tomates_humidite": { ...hass.states["sensor.tomates_humidite"], state: "35" } };
+  card.hass = { ...hass, states: st };
+  assert.equal(card._model, model, "the model is not rebuilt for a state change");
+  assert.doesNotMatch(html(), /Tomatoes: Needs water/);
+  // A threshold number of a Plant Monitor plant is watched too.
+  const ids = card._entityIds(card._model);
+  assert.ok(ids.some((id) => id.startsWith("number.")), "the threshold numbers are dependencies");
+});
+
 test("zones, plants, soil sensors and the weather are discovered from the registries", () => {
   const m = gc.resolve(makeHass(), {});
   same(
@@ -391,6 +404,10 @@ test("visual editor: zone and plant lists edited as entities and devices, YAML o
   const back = gc.fromForm({ ...form, zone_entities: ["switch.haie"] }, config);
   same(JSON.parse(JSON.stringify(back.zones)), [{ entity: "switch.haie", duration: 25 }]);
   same(JSON.parse(JSON.stringify(back.plants)), ["plant.basilic", { device: "flora", min_moisture: 10 }]);
+  // A plant made of sensors (YAML only: no entity, no device) survives an edit in the form.
+  const fern = { name: "Fern", moisture: "sensor.sol_gazon" };
+  const withFern = { ...config, plants: [...config.plants, fern] };
+  same(JSON.parse(JSON.stringify(gc.fromForm(gc.toForm(withFern), withFern).plants)), ["plant.basilic", { device: "flora", min_moisture: 10 }, fern]);
   assert.equal(typeof gc.GardenCard.getConfigElement, "function");
   same(gc.GardenCard.getStubConfig(), {});
   assert.ok(gc.window.customCards.some((c) => c.type === "garden-mini-card"));
