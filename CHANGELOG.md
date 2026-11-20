@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.1 - 2026-11-20
+
+### Fixes
+- Plants: a reading that changes (soil moisture, conductivity, light, temperature, battery), a Plant Monitor threshold or the plant integration's verdict is now shown at once; the card kept the values read when the registries last changed.
+- Visual editor: a plant made of sensors in YAML (no `entity`, no `device`) is no longer dropped when another option is edited.
+
+### Maintenance
+- README: the `plants_auto` option is documented.
+- The commitlint config is an ES module (the package is `"type": "module"`): the local `commit-msg` hook no longer crashes.
+
 ## 1.2.0 - 2026-11-18
 
 ### Features
