@@ -3,6 +3,7 @@
 ## 1.2.1 - 2026-11-20
 
 ### Fixes
+- Status pill: it now sits at the right end of the title's row (aligned with the title, as the ha-* charter asks) instead of right after the title; it still drops under the subtitle, then keeps its dot, when the title and the pill do not fit.
 - Plants: a reading that changes (soil moisture, conductivity, light, temperature, battery), a Plant Monitor threshold or the plant integration's verdict is now shown at once; the card kept the values read when the registries last changed.
 - Visual editor: a plant made of sensors in YAML (no `entity`, no `device`) is no longer dropped when another option is edited.
 

@@ -2485,7 +2485,7 @@ const BANNER_STYLE = `
   .htext { position: absolute; left: 12px; top: 6px; bottom: calc(var(--gc-ground) + 4px); right: calc(var(--gc-stage-w) + 4px);
            display: flex; align-items: center; gap: 10px; min-width: 0; }
   .htext .titles { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 1px; container: gc-titles / inline-size; }
-  /* The status pill on the title's row: the title ellipsises first (4 characters kept), the pill keeps its label. */
+  /* The status pill at the right end of the title's row: the title ellipsises first (4 characters kept), the pill keeps its label. */
   .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
   .trow .name { flex: 0 1 auto; min-width: 4.6ch; }
   .htext .name { font-weight: 600; }
@@ -2496,7 +2496,7 @@ const BANNER_STYLE = `
   .banner .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 80%, #10283f); }
   .banner.night .type-icon { background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
   .banner.night .type-icon .icon { fill: color-mix(in srgb, var(--gc-tint) 70%, #fff); }
-  .banner .chip { flex: none; max-width: none; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+  .banner .chip { flex: none; max-width: none; margin-left: auto; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
   .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
   .banner .dot { width: 7px; height: 7px; }
   .banner .zoom { position: absolute; z-index: 2; top: 5px; right: 5px; margin: 0; color: #33506b; background: rgba(255,255,255,.55);
@@ -2506,7 +2506,7 @@ const BANNER_STYLE = `
   .banner.night .zoom:hover { background: rgba(255,255,255,.22); }
   /* The whole title and the pill's whole label do not fit on one row (measured, see _fitPill): the pill takes a line
      of its own under the subtitle, which keeps one line; when that does not fit above the lawn, its dot alone. */
-  .titles.below .trow { display: contents; } .banner .titles.below .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; }
+  .titles.below .trow { display: contents; } .banner .titles.below .chip { grid-row: 3; justify-self: start; max-width: 100%; margin-top: 3px; margin-left: 0; }
   .titles.below .sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .banner .titles.dot-only .chip { padding: 4px; } .banner .titles.dot-only .chip-text { display: none; }
   @keyframes gc-drift { to { transform: translateX(4px); } }
@@ -2823,8 +2823,8 @@ class GardenCard extends HTMLElement {
     this._update();
   }
 
-  // The banner's status pill, measured after each render and on a new width (in every language): it sits on the
-  // title's row, right after the title, only when the whole title and the pill's whole label fit there; otherwise it
+  // The banner's status pill, measured after each render and on a new width (in every language): it sits at the
+  // right end of the title's row only when the whole title and the pill's whole label fit there; otherwise it
   // takes a line of its own under the subtitle (.below), the title whole on its row (cut only when it does not fit
   // alone) and the subtitle on one line. When the three lines do not fit in the banner above the lawn, or the label
   // not on its line, the pill shows its dot alone (.dot-only): beside the title when the whole title leaves it room, else under the subtitle.
