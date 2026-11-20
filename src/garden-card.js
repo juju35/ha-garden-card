@@ -2112,9 +2112,18 @@ const byDevice = (hass) => {
 
 const devName = (d) => d?.name_by_user || d?.name || "";
 const nameOf = (hass, id, fallback) => fallback || hass.states[id]?.attributes?.friendly_name || id;
+// Devices by display or registry name (the first device that has it, as a scan would find), built once per device registry object.
+const devByName = new WeakMap();
 const findDev = (hass, ref) => {
   if (!ref || !hass.devices) return null;
-  return hass.devices[ref] || Object.values(hass.devices).find((d) => devName(d) === ref || d.name === ref) || null;
+  if (hass.devices[ref]) return hass.devices[ref];
+  let names = devByName.get(hass.devices);
+  if (!names) {
+    names = new Map();
+    for (const d of Object.values(hass.devices)) for (const n of [devName(d), d.name]) if (n && !names.has(n)) names.set(n, d);
+    devByName.set(hass.devices, names);
+  }
+  return names.get(ref) || null;
 };
 // What an entity is called, to recognise it: its id, translation key and names (registry and state), as snake_case.
 const keyText = (e, hass) =>

@@ -9,6 +9,7 @@
 
 ### Performance
 - Rendering: the card is patched in place instead of rewritten on every change (a small DOM morph): the banner's animations run on, images are not reloaded, the focus and the height stay; the status pill is measured once Home Assistant's `<ha-card>` has rendered, so it is in its place from the first frame.
+- A plant or zone set by device name finds its device through a name index built once per device registry, instead of a scan of every device per plant on each rebuild.
 
 ### Maintenance
 - README: the `plants_auto` option is documented.
