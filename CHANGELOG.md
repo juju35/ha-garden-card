@@ -7,6 +7,9 @@
 - Plants: a reading that changes (soil moisture, conductivity, light, temperature, battery), a Plant Monitor threshold or the plant integration's verdict is now shown at once; the card kept the values read when the registries last changed.
 - Visual editor: a plant made of sensors in YAML (no `entity`, no `device`) is no longer dropped when another option is edited.
 
+### Performance
+- Rendering: the card is patched in place instead of rewritten on every change (a small DOM morph): the banner's animations run on, images are not reloaded, the focus and the height stay; the status pill is measured once Home Assistant's `<ha-card>` has rendered, so it is in its place from the first frame.
+
 ### Maintenance
 - README: the `plants_auto` option is documented.
 - The commitlint config is an ES module (the package is `"type": "module"`): the local `commit-msg` hook no longer crashes.
