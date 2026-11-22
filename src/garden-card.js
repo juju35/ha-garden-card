@@ -3909,7 +3909,7 @@ for (const card of [
     description: "Compact garden overview: the zone watering now, the next watering, the rain suggestion and the plants needing attention.",
   },
 ]) {
-  if (!window.customCards.some((c) => c.type === card.type)) window.customCards.push({ ...card, preview: true, documentationURL: "https://github.com/juju35/ha-garden-card" });
+  if (!window.customCards.some((c) => c.type === card.type)) window.customCards.push({ ...card, preview: false, documentationURL: "https://github.com/juju35/ha-garden-card" });
 }
 
 console.info(`%c GARDEN-CARD %c v${VERSION} `, "color: white; background: #3f9b4f; font-weight: 700;", "color: #3f9b4f; background: white; font-weight: 700;");
