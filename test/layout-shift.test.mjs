@@ -4,11 +4,11 @@
 // banner's animations run on), the height stays the same, and the status pill is measured once the card has
 // rendered (same place from the first frame). Skipped when Playwright or Chromium is not installed.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { after, before, test } from "node:test";
 import { devices, entities, forecast, states } from "../scripts/mock-states.mjs";
+import { source } from "./source.mjs";
 
-const src = readFileSync(new URL("../src/garden-card.js", import.meta.url), "utf8");
+const src = source;
 const HA_CARD = `customElements.define("ha-card", class extends HTMLElement {
   constructor() { super(); this.hasUpdated = false; this.attachShadow({ mode: "open" }); }
   connectedCallback() {
