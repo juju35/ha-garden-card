@@ -2,11 +2,11 @@
 // the plant's name is whole (the status chip goes under it rather than cut it), a label shown is never cut, every bar
 // of a tile starts and ends at the same place, and no text is under 11 px. Skipped when Chromium is not installed.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { after, before, test } from "node:test";
 import { devices, entities, forecast, states, thirsty } from "../scripts/mock-states.mjs";
+import { source } from "./source.mjs";
 
-const src = readFileSync(new URL("../src/garden-card.js", import.meta.url), "utf8");
+const src = source;
 const HA_CARD = `customElements.define("ha-card", class extends HTMLElement { constructor() { super();
   this.attachShadow({ mode: "open" }).innerHTML = "<style>:host{display:block;overflow:hidden}</style><slot></slot>"; } });`;
 let browser;
