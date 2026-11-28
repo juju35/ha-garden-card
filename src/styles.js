@@ -55,6 +55,15 @@ export const BASE_STYLE = `
   .line { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
   .line .icon { width: 16px; height: 16px; }
   .line span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* A zone's extra sensors (#30): small neutral pills, their state in the text colour, the active ones in the accent. */
+  .zsensors { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; min-width: 0; }
+  .zs { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 1px 8px; border-radius: 10px; font-size: 11px; line-height: 18px; cursor: pointer;
+    color: var(--secondary-text-color); background: color-mix(in srgb, var(--primary-text-color) 6%, transparent); }
+  .zs > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .zs .zs-state { color: var(--primary-text-color); font-weight: 500; }
+  .zs ha-icon { --mdc-icon-size: 14px; flex: none; }
+  .zs.on ha-icon, .zs.on .zs-state { color: var(--gc-accent, var(--primary-color)); }
+  .zs.na { opacity: .6; }
   .line.warn, .line.crit, .line.active { color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); }
   .line.warn .icon, .line.crit .icon, .line.active .icon { color: var(--c); }
   .picture { flex: none; display: flex; align-items: center; justify-content: center; }

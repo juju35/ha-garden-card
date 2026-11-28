@@ -44,7 +44,7 @@ Zones, plants, soil sensors and the weather entity are **discovered automaticall
 - **Plants**: moisture, fertility (conductivity), light, temperature and battery as gauges, the green band showing the plant's thresholds; a plant that needs water turns red with a pulsing drop
 - Thresholds from the plant's own settings (the Plant Monitor threshold numbers), your configuration, or sensible defaults (those of the plant integration for moisture and fertility)
 - **Soil moisture** sensors as gauges too
-- Collapsible sections (zones, plants, soil moisture), folded back to their defaults by a click elsewhere on the page
+- Collapsible sections (zones, plants, soil moisture), renamed with `section_titles`, folded back to their defaults by a click elsewhere on the page
 - Detail button on the mini card (top right): it switches the mini card to the full card's content and back; a click anywhere outside the card brings the compact view back
 - Click any value to open its Home Assistant history (more-info dialog)
 - Visual editor in the dashboard UI for both cards (no YAML needed)
@@ -207,6 +207,7 @@ language: en
 | `show_plants` | both | `true` | Plants section |
 | `show_soil` | both | `true` | Soil moisture section |
 | `collapsed` | both | `[]` | Sections folded by default, among `zones`, `plants` and `soil`. Click a section title (or Tab to it and press Enter or Space) to fold or unfold it |
+| `section_titles` | both | — | **YAML only.** Rename sections: a map of `zones`, `plants` or `soil` to its title (`section_titles: {zones: Irrigation, soil: Humidity}`); a section left out keeps its own name |
 | `zoom` | mini | `true` | Detail button at the top right of the mini card: it shows the full card's content (with the same options, so `show_zones`, `collapsed`, `moisture_sensors`… can be set on the mini card too, in its visual editor as well) and switches back to the compact view; a click outside the card also brings the compact view back. `false` removes the button |
 | `language` | both | Auto | Force language: `fr`, `en`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
@@ -221,6 +222,7 @@ language: en
 | `remaining` | Sensor of the time left: a duration (s, min or h, counted from its last update) or a timestamp of the end |
 | `total` | Sensor of the length of the current run (for the ring) |
 | `next_run` | Timestamp sensor of the zone's next run |
+| `sensors` | Extra sensors shown under the zone, as small pills with their name and state (a valve's open / closed state, a flow or pressure sensor…): entity ids or objects with `entity`, `name` and `icon`; the entity's own icon is used when it has one, and a tap opens its details |
 | `duration_entity` | Number entity set to the duration before opening the zone (unit read from the entity) |
 | `z2m_topic` | SONOFF SWV on Zigbee2MQTT: the valve's topic (default `zigbee2mqtt/<device name>`; set it with another base topic) |
 | `open_for` | Gardena Bluetooth: the *Open for* number (minutes) that opens the valve for the duration |

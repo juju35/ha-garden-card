@@ -72,6 +72,10 @@ export const buildZone = (hass, item, entry, siblings, single) => {
     durationEntity: cfg.duration_entity ?? pick(hass, list, "number", /duration|watering_time|run_time|irrigation_time|manual_watering/),
     watering: cfg.watering ?? pick(hass, list, "binary_sensor", /watering/),
     moisture: cfg.moisture ?? pick(hass, list, "sensor", /./, (e) => deviceClass(hass, e.entity_id) === "moisture"),
+    // Extra sensors shown under the zone (#30): entity ids or { entity, name, icon } (a valve's state, a flow…).
+    sensors: asList(cfg.sensors)
+      .map((x) => (typeof x === "string" ? { entity: x } : x && typeof x === "object" ? { entity: x.entity, name: x.name, icon: x.icon } : null))
+      .filter((x) => typeof x?.entity === "string" && x.entity.includes(".")),
   };
   // SONOFF SWV water valves on Zigbee2MQTT: no duration entity, but the valve takes a timed run of its own
   // (cyclic_timed_irrigation, published on its set topic) and closes itself, whatever becomes of Home Assistant.
