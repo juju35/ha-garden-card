@@ -101,6 +101,31 @@ test("configured zones keep their own options and name", () => {
   );
 });
 
+test("a zone shows its extra sensors, and section_titles renames the sections (#30)", async () => {
+  const valve = { entity_id: "binary_sensor.hedge_valve", state: "on", attributes: { friendly_name: "Hedge valve", device_class: "opening" } };
+  const flow = { entity_id: "sensor.hedge_flow", state: "4.2", attributes: { friendly_name: "Hedge flow", unit_of_measurement: "L/min", icon: "mdi:water-pump" } };
+  const config = {
+    zones: [{ entity: "switch.haie", sensors: ["binary_sensor.hedge_valve", { entity: "sensor.hedge_flow", name: "Flow" }, "sensor.missing", 3] }],
+    section_titles: { zones: "Irrigation", soil: " " },
+  };
+  const { card, hass, html } = await mount(config, { extraStates: { [valve.entity_id]: valve, [flow.entity_id]: flow } });
+  const out = html();
+  assert.match(out, /class="zs on" data-entity="binary_sensor.hedge_valve"[^>]*><span>Hedge valve<\/span><span class="zs-state">on<\/span>/);
+  assert.match(out, /data-entity="sensor.hedge_flow"[^>]*><ha-icon icon="mdi:water-pump"><\/ha-icon><span>Flow<\/span><span class="zs-state">4.2 L\/min<\/span>/);
+  assert.doesNotMatch(out, /sensor\.missing/);
+  assert.match(out, /data-section="zones"[^>]*>.*?<span>Irrigation<\/span>/s);
+  assert.doesNotMatch(out, /<span> <\/span>/);
+  // A sensor's change redraws the card.
+  assert.ok(card._entityIds(card._resolve(false)).includes("sensor.hedge_flow"));
+  // A tap opens its details.
+  const fired = [];
+  card.dispatchEvent = (ev) => fired.push(ev);
+  click(card, { entity: "sensor.hedge_flow" });
+  assert.equal(fired.at(-1)?.type, "hass-more-info");
+  assert.equal(fired.at(-1)?.detail.entityId, "sensor.hedge_flow");
+  assert.equal(hass.calls.filter((c) => c[0] !== "subscribe").length, 0);
+});
+
 test("rain outlook: the part of each forecast entry inside the window, and the highest probability", () => {
   const o = gc.rainOutlook(forecast, "hourly", NOW, 24);
   // The current hour counts for its remaining half (0 mm), the 24th entry is cut at the window's end.

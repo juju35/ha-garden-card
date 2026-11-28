@@ -121,7 +121,7 @@ export class GardenCard extends HTMLElement {
   }
 
   _entityIds(m) {
-    const z = m.zones.flatMap((z) => [z.entity, z.remaining, z.total, z.next, z.durationEntity, z.watering, z.running, z.moisture]);
+    const z = m.zones.flatMap((z) => [z.entity, z.remaining, z.total, z.next, z.durationEntity, z.watering, z.running, z.moisture, ...(z.sensors || []).map((x) => x.entity)]);
     const p = m.plants.flatMap((p) => [p.entity, ...Object.values(p.sensors), ...(p.limits || [])]);
     return [...z, ...p, ...m.soil.map((s) => s.entity), m.weather, this._config.rain_sensor, this._config.next_run].filter(Boolean);
   }
@@ -571,8 +571,11 @@ export class GardenCard extends HTMLElement {
     return asList(c).includes(key);
   }
 
-  _sectionTitle(key, icon, label, count = "") {
+  _sectionTitle(key, icon, name, count = "") {
     const closed = this._isCollapsed(key);
+    // `section_titles` renames a section (#30); left out or blank, its own name.
+    const own = this._config.section_titles?.[key];
+    const label = typeof own === "string" && own.trim() ? own.trim() : name;
     return `<div class="section-title toggle" role="button" tabindex="0" data-action="toggle_section" data-section="${key}" aria-expanded="${!closed}">${svgIcon(icon)}<span>${esc(
       label,
     )}</span>${count ? `<span class="count">${esc(count)}</span>` : ""}${svgIcon(ICONS.chevron_down, "chevron")}</div>`;
@@ -809,6 +812,23 @@ export class GardenCard extends HTMLElement {
     return `<div class="line${tm.running ? " active" : ""}">${parts.join("")}</div>`;
   }
 
+  // The zone's extra sensors (#30): name and state, the entity's icon when it has one; a tap opens its details.
+  _zoneSensors(z) {
+    const h = this._hass;
+    const chips = (z.sensors || []).map((x) => {
+      const st = h.states[x.entity];
+      if (!st) return "";
+      const icon = x.icon ?? h.entities?.[x.entity]?.icon ?? st.attributes?.icon;
+      const off = st.state === "unavailable" || st.state === "unknown";
+      const unit = st.attributes?.unit_of_measurement;
+      const state = off ? this._t("unavailable") : (h.formatEntityState?.(st) ?? (unit ? `${st.state} ${unit}` : st.state));
+      const name = x.name ?? nameOf(h, x.entity);
+      const cls = `zs${st.state === "on" ? " on" : ""}${off ? " na" : ""}`;
+      return `<span class="${cls}" data-entity="${esc(x.entity)}" title="${esc(`${name}: ${state}`)}">${icon ? `<ha-icon icon="${esc(icon)}"></ha-icon>` : ""}<span>${esc(name)}</span><span class="zs-state">${esc(state)}</span></span>`;
+    });
+    return chips.some(Boolean) ? `<div class="zsensors">${chips.join("")}</div>` : "";
+  }
+
   _zoneButton(z, tm, round = false) {
     const off = this._zoneOffline(z) ? " disabled" : "";
     const [action, icon, label, cls] = tm.running ? ["stop", ICONS.stop, this._t("stop"), "active"] : ["start", ICONS.play, this._t("start"), ""];
@@ -824,7 +844,7 @@ export class GardenCard extends HTMLElement {
       const tm = this._timing(z);
       return `<div class="zone">
         ${this._zoneIcon(z, tm)}
-        <div class="info clickable" role="button" tabindex="0" data-entity="${esc(z.entity)}"><div class="zname">${esc(z.name)}</div>${this._zoneLine(z, tm)}</div>
+        <div class="info clickable" role="button" tabindex="0" data-entity="${esc(z.entity)}"><div class="zname">${esc(z.name)}</div>${this._zoneLine(z, tm)}${this._zoneSensors(z)}</div>
         ${this._zoneButton(z, tm)}
       </div>`;
     });

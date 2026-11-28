@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 - 2026-11-28
+
+### Features
+- `section_titles` renames the sections (`section_titles: {zones: Irrigation, soil: Humidity}`), the others keep their name (#30).
+- A zone's `sensors`: sensors and binary sensors shown under the zone as pills with their name and state (a solenoid valve's state, a flow…), with the entity's icon when it has one; a tap opens their details (#30).
+
 ## 1.2.5 - 2026-11-27
 
 ### Fixes
